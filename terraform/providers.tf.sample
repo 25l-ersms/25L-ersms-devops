@@ -1,0 +1,17 @@
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "~> 6.8"
+    }
+  }
+
+  backend "gcs" {
+    bucket = "{{gcp_state_bucket}}"
+  }
+}
+
+provider "google" {
+  project = "{{gcp_project}}"
+  region  = "{{gcp_region}}"
+}
