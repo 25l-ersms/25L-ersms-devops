@@ -1,7 +1,11 @@
 output "region" {
-  value = data.google_client_config.this.region
+  value = local.gcp_region
 }
 
 output "project" {
-  value = data.google_client_config.this.project
+  value = local.gcp_project_id
+}
+
+output "lb_ip" {
+  value = module.gce-lb-http.external_ip
 }

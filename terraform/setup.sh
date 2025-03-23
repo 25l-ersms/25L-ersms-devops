@@ -29,8 +29,10 @@ read -p "Enter resource prefix: " RESOURCE_PREFIX
 heading "Enabling APIs..."
 (
     set -x
-    gcloud services enable compute.googleapis.com 
-    gcloud services enable storage.googleapis.com
+    gcloud services enable compute.googleapis.com \
+        storage.googleapis.com \
+        run.googleapis.com \
+        cloudbuild.googleapis.com
 )
 
 heading "Writing terraform config..."
