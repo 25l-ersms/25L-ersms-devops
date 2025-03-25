@@ -36,11 +36,11 @@ heading "Enabling APIs..."
 )
 
 heading "Writing terraform config..."
-sed -E "s#\{\{gcp_project\}\}#$PROJECT#gm" providers.tf.sample | \
+sed -E "s#\{\{gcp_project\}\}#$PROJECT#gm" sample/providers.tf.sample | \
     sed -E "s#\{\{gcp_state_bucket\}\}#$RESOURCE_PREFIX-terraform-state#gm" | \
     sed -E "s#\{\{gcp_region\}\}#$REGION#gm" > providers.tf
 
-sed -E "s#\{\{resource_prefix\}\}#$RESOURCE_PREFIX#gm" terraform.tfvars.sample > terraform.tfvars
+sed -E "s#\{\{resource_prefix\}\}#$RESOURCE_PREFIX#gm" sample/terraform.tfvars.sample > terraform.tfvars
 
 heading "Creating remote backend..."
 gcloud storage buckets create "gs://$RESOURCE_PREFIX-terraform-state" \
