@@ -51,7 +51,8 @@ heading "Enabling APIs..."
         storage.googleapis.com \
         run.googleapis.com \
         cloudbuild.googleapis.com \
-        servicenetworking.googleapis.com
+        servicenetworking.googleapis.com \
+        sqladmin.googleapis.com
 )
 
 heading "Initializing terraform..."

@@ -12,7 +12,7 @@ module "pg" {
   // Master configurations
   tier                            = "db-custom-1-3840"
   zone                            = "${local.gcp_region}-a"
-  availability_type               = "REGIONAL"
+  availability_type               = "ZONAL"
   maintenance_window_day          = 7
   maintenance_window_hour         = 12
   maintenance_window_update_track = "stable"
@@ -23,10 +23,10 @@ module "pg" {
 
 
   ip_configuration = {
-    ipv4_enabled       = true
-    ssl_mode           = "ENCRYPTED_ONLY" // can also be ALLOW_UNENCRYPTED_AND_ENCRYPTED
+    ipv4_enabled       = false
+    ssl_mode           = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" // can also be ENCRYPTED_ONLY
     private_network    = module.vpc.network_self_link
-    allocated_ip_range = null
+    allocated_ip_range = google_compute_global_address.private_ip_alloc.name
     authorized_networks = []
   }
 
@@ -73,6 +73,8 @@ module "pg" {
       random_password = false
     },
   ]
+
+  depends_on = [ google_service_networking_connection.default ]
 }
 
 resource "random_password" "visit_manager_postgres_generated_password_root" {
