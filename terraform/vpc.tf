@@ -87,3 +87,22 @@ resource "google_compute_firewall" "bastion_inbound" {
   source_ranges = [ "${local.caller_ip}/32" ]
   target_service_accounts = [ google_service_account.bastion_service_account.email ]
 }
+
+resource "google_compute_firewall" "bastion_outbound" {
+  name    = "${local.prfx}bastion-outbound-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 100
+
+  direction = "EGRESS"
+  
+  allow {
+    protocol = "tcp"
+    ports    = ["0-65535"]
+    # ports    = [var.visit_manager_postgres_port]
+
+  }
+
+  source_ranges = [ "0.0.0.0/0" ]
+  target_service_accounts = [ module.pg.instance_service_account_email_address ]
+}

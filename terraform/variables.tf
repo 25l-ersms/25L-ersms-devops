@@ -25,6 +25,12 @@ variable "visit_manager_postgres_db_name" {
   default = "visit_manager"
 }
 
+variable "visit_manager_postgres_port" {
+  description = "Port for connections to DB for visit manager service"
+  type = string
+  default = "5432"
+}
+
 variable "visit_manager_postgres_root_user" {
   description = "Root username for visit manager PostgreSQL"
   type = string
@@ -36,7 +42,6 @@ variable "visit_manager_postgres_root_password" {
   type = string
   default = null
 }
-
 
 variable "visit_manager_postgres_user" {
   description = "User username for visit manager PostgreSQL"
