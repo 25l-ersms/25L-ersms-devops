@@ -32,7 +32,8 @@ heading "Enabling APIs..."
     gcloud services enable compute.googleapis.com \
         storage.googleapis.com \
         run.googleapis.com \
-        cloudbuild.googleapis.com
+        cloudbuild.googleapis.com \
+        servicenetworking.googleapis.com
 )
 
 heading "Writing terraform config..."
