@@ -10,3 +10,9 @@
 chmod +x setup.sh
 ./setup.sh
 ```
+
+### Init
+
+```shell
+terraform apply
+```

@@ -52,7 +52,8 @@ heading "Enabling APIs..."
         run.googleapis.com \
         cloudbuild.googleapis.com \
         servicenetworking.googleapis.com \
-        sqladmin.googleapis.com
+        sqladmin.googleapis.com \
+        managedkafka.googleapis.com
 )
 
 heading "Initializing terraform..."

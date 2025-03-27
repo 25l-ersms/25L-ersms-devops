@@ -88,8 +88,8 @@ resource "google_compute_firewall" "bastion_inbound" {
   target_service_accounts = [ google_service_account.bastion_service_account.email ]
 }
 
-resource "google_compute_firewall" "bastion_outbound" {
-  name    = "${local.prfx}bastion-outbound-firewall"
+resource "google_compute_firewall" "bastion_outbound_postgres" {
+  name    = "${local.prfx}bastion-outbound-postgres-firewall"
   network = module.vpc.network_self_link
 
   priority = 100
@@ -98,11 +98,46 @@ resource "google_compute_firewall" "bastion_outbound" {
   
   allow {
     protocol = "tcp"
-    ports    = ["0-65535"]
-    # ports    = [var.visit_manager_postgres_port]
+    # ports    = ["0-65535"]
+    ports    = [var.visit_manager_postgres_port]
 
   }
 
-  source_ranges = [ "0.0.0.0/0" ]
   target_service_accounts = [ module.pg.instance_service_account_email_address ]
+}
+
+resource "google_compute_firewall" "bastion_outbound_elasticsearch" {
+  name    = "${local.prfx}bastion-outbound-elasticsearch-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 100
+
+  direction = "EGRESS"
+  
+  allow {
+    protocol = "tcp"
+    # ports    = ["0-65535"]
+    ports    = [9200]
+
+  }
+
+  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+}
+
+resource "google_compute_firewall" "elasticsearch_inbound" {
+  name    = "${local.prfx}elasticsearch-inblund-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 100
+
+  direction = "INGRESS"
+  
+  allow {
+    protocol = "tcp"
+    # ports    = ["0-65535"]
+    ports    = [22, 9200]
+
+  }
+
+  source_service_accounts = [ google_service_account.bastion_service_account.email ]
 }
