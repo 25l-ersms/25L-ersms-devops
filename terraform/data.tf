@@ -4,6 +4,7 @@ data "http" "caller_ip_response" {
   url = "https://ifconfig.me/ip"
 }
 
+# TODO only run once with cloud-init
 resource "terraform_data" "bastion_startup_script" {
   input = <<EOF
 #!/bin/bash
@@ -26,6 +27,26 @@ chmod 644 /etc/apt/sources.list.d/kubernetes.list
 apt-get update
 
 # Install tools
-DEBIAN_FRONTEND=noninteractive apt-get install -y kubectl postgresql-client-16 postgresql-client-common
+DEBIAN_FRONTEND=noninteractive apt-get install -y kubectl postgresql-client-16 postgresql-client-common kafkacat
+EOF
+}
+
+# TODO only run once with cloud-init
+# TODO set network.host to expose the service in network
+resource "terraform_data" "elasticsearch_startup_script" {
+  input = <<EOF
+#!/bin/bash
+
+set -x
+
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
+DEBIAN_FRONTEND=noninteractive apt-get install -y apt-transport-https
+echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/8.x/apt stable main" | tee /etc/apt/sources.list.d/elastic-8.x.list
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y elasticsearch
+
+systemctl daemon-reload
+systemctl enable elasticsearch.service
+systemctl start elasticsearch.service
 EOF
 }

@@ -36,3 +36,7 @@ output "postgres_user_password" {
   value = module.pg.additional_users[0].password
   sensitive = true
 }
+
+output "elasticsearch_ip" {
+  value = google_compute_instance.elasticsearch.network_interface[0].network_ip 
+}
