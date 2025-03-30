@@ -53,7 +53,10 @@ heading "Enabling APIs..."
         cloudbuild.googleapis.com \
         servicenetworking.googleapis.com \
         sqladmin.googleapis.com \
-        managedkafka.googleapis.com
+        managedkafka.googleapis.com \
+        container.googleapis.com \
+        cloudresourcemanager.googleapis.com \
+        dns.googleapis.com
 )
 
 heading "Initializing terraform..."

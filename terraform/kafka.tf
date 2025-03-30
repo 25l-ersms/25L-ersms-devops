@@ -10,9 +10,16 @@
 # -X sasl.password=<B64_ENCODED_CREDS_FILE> \
 # -L -t <RES_PREFIX>-dummy-topic
 
-resource "google_managed_kafka_cluster" "example" {
+
+# better approach:
+# https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart
+
+
+resource "google_managed_kafka_cluster" "kafka" {
   cluster_id = "${local.prfx}kafka"
   location = local.gcp_region
+  project = local.gcp_project_id
+
   capacity_config {
     vcpu_count = 3
     memory_bytes = 3221225472
@@ -31,7 +38,7 @@ resource "google_managed_kafka_cluster" "example" {
 
 resource "google_managed_kafka_topic" "dummy" {
   topic_id = "${local.prfx}dummy-topic"
-  cluster = google_managed_kafka_cluster.example.cluster_id
+  cluster = google_managed_kafka_cluster.kafka.cluster_id
   location = local.gcp_region
   partition_count = 2
   replication_factor = 3

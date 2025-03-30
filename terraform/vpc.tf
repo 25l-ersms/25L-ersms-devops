@@ -1,33 +1,46 @@
 module "vpc" {
-    source  = "terraform-google-modules/network/google"
-    version = "~> 10.0"
+  source  = "terraform-google-modules/network/google"
+  version = "~> 10.0"
 
-    project_id   = local.gcp_project_id
-    network_name = "${local.prfx}vpc"
-    routing_mode = "REGIONAL"
+  project_id   = local.gcp_project_id
+  network_name = "${local.prfx}vpc"
+  routing_mode = "REGIONAL"
 
-    subnets = [
-        {
-            subnet_name               = "${local.prfx}private-subnet"
-            subnet_ip                 = local.vpc_private_cird
-            subnet_region             = local.gcp_region
-            # enable if needed
-            # subnet_flow_logs          = "true"
-            # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-            # subnet_flow_logs_sampling = 0.7
-            # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-        },
-        {
-            subnet_name               = "${local.prfx}public-subnet"
-            subnet_ip                 = local.vpc_public_cird
-            subnet_region             = local.gcp_region
-            # enable if needed
-            # subnet_flow_logs          = "true"
-            # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-            # subnet_flow_logs_sampling = 0.7
-            # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-        }
+  subnets = [
+      {
+          subnet_name               = "${local.prfx}private-subnet"
+          subnet_ip                 = local.vpc_private_cidr
+          subnet_region             = local.gcp_region
+          # enable if needed
+          # subnet_flow_logs          = "true"
+          # subnet_flow_logs_interval = "INTERVAL_10_MIN"
+          # subnet_flow_logs_sampling = 0.7
+          # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+      },
+      {
+          subnet_name               = "${local.prfx}public-subnet"
+          subnet_ip                 = local.vpc_public_cidr
+          subnet_region             = local.gcp_region
+          # enable if needed
+          # subnet_flow_logs          = "true"
+          # subnet_flow_logs_interval = "INTERVAL_10_MIN"
+          # subnet_flow_logs_sampling = 0.7
+          # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+      }
+  ]
+
+  secondary_ranges = {
+    ("${local.prfx}private-subnet") = [
+      {
+        range_name    = local.vpc_ip_range_gke_pods
+        ip_cidr_range = local.vpc_ip_range_gke_pods_cidr
+      },
+      {
+        range_name    = local.vpc_ip_range_gke_services
+        ip_cidr_range = local.vpc_ip_range_gke_services_cidr
+      },
     ]
+  }
 }
 
 # Router and Cloud NAT are required for installing packages from repos (apache, php etc)
@@ -68,7 +81,7 @@ resource "google_compute_firewall" "vpc_private_internal" {
     ports    = ["0-65535"]
   }
 
-  source_ranges = [ local.vpc_private_cird ]
+  source_ranges = [ local.vpc_private_cidr ]
 }
 
 resource "google_compute_firewall" "bastion_inbound" {

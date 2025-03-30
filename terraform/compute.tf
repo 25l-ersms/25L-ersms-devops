@@ -23,7 +23,9 @@ resource "google_compute_instance" "bastion" {
 
   service_account {
     email  = google_service_account.bastion_service_account.email
-    scopes = []
+    scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
   }
 
   allow_stopping_for_update = true
