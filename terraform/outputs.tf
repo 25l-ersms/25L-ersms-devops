@@ -57,3 +57,17 @@ output "elasticsearch_ip" {
 output "kafka_bootstrap_url" {
   value = "bootstrap.${google_managed_kafka_cluster.kafka.cluster_id}.${google_managed_kafka_cluster.kafka.location}.managedkafka.${local.gcp_project_id}.cloud.goog:9092"
 }
+
+#######
+# GKE #
+#######
+
+output "gke_cluster_name" {
+  value = module.gke.name
+}
+output "gke_cluster_endpoint" {
+  value = module.gke.endpoint
+}
+output "gke_cluster_dns_endpoint" {
+  value = module.gke.endpoint_dns
+}

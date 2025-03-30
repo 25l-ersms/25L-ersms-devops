@@ -22,7 +22,7 @@ terraform apply
 ##### Prerequisite - connect to bastion host
 
 ```shell
-gcloud compute ssh --zone "<REGION-a" "<RESOURCE_PREFIX>--bastion" --project "<PROJECT_ID>" -- -p 2222
+gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PREFIX>--bastion" --project "<PROJECT_ID>" -- -p 2222
 ```
 
 ##### Kafka
@@ -78,4 +78,20 @@ From `psql` shell:
 
 ```sql
 SELECT datname FROM pg_database;
+```
+
+##### GKE cluster
+
+***FROM BASTION HOST***
+
+Fetch GKE credentials:
+
+```shell
+gcloud container clusters get-credentials ersms-test-gke --region=<REGION>-a --project=<PROJECT_ID>
+```
+
+Interact with the cluster using `kubectl`:
+
+```shell
+kubectl get pods --all-namespaces
 ```

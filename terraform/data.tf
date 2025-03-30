@@ -24,10 +24,20 @@ curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | gpg --dearm
 chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
 chmod 644 /etc/apt/sources.list.d/kubernetes.list
+
+# Add gcloud repo
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
 apt-get update
 
 # Install tools
-DEBIAN_FRONTEND=noninteractive apt-get install -y kubectl postgresql-client-16 postgresql-client-common kafkacat
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    kubectl \
+    postgresql-client-16 \
+    postgresql-client-common \
+    kafkacat \
+    google-cloud-sdk-gke-gcloud-auth-plugin
 EOF
 }
 

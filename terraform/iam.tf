@@ -9,7 +9,9 @@ resource "google_project_iam_binding" "bastion_service_account_iam_binding" {
     "roles/storage.objectViewer",
     "roles/managedkafka.client",
     "roles/managedkafka.viewer",
-    "roles/iam.serviceAccountUser"
+    "roles/iam.serviceAccountUser",
+    "roles/container.developer",
+    "roles/container.viewer"
   ])
   project = local.gcp_project_id
   role    = each.value
