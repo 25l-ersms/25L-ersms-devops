@@ -30,3 +30,14 @@ resource "google_service_account" "gke_service_account" {
   account_id   = "${local.prfx}gke"
   display_name = "GKE"
 }
+
+# allow GKE to manage firewall rules
+# https://cloud.google.com/kubernetes-engine/docs/concepts/ingress#providing_the_ingress_controller_permission_to_manage_host_project_firewall_rules
+resource "google_project_iam_binding" "gke_ingress_controller_iam_binding" {
+  project = local.gcp_project_id
+  role    = "roles/compute.securityAdmin"
+
+  members = [
+    "serviceAccount:service-${local.gcp_project_number}@container-engine-robot.iam.gserviceaccount.com"
+  ]
+}

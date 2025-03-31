@@ -33,7 +33,7 @@ module "gke" {
   deploy_using_private_endpoint = true  
 
   # addons
-  http_load_balancing        = false
+  http_load_balancing        = true
   network_policy             = false
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
@@ -92,6 +92,8 @@ module "gke" {
         "https://www.googleapis.com/auth/cloud-platform"
         ]
   }
+}
 
-
+resource "google_compute_global_address" "ingress_external_alb_ip" {
+  name = "ingress-external-alb-ipv4"
 }

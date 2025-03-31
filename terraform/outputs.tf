@@ -71,3 +71,11 @@ output "gke_cluster_endpoint" {
 output "gke_cluster_dns_endpoint" {
   value = module.gke.endpoint_dns
 }
+
+###########
+# Storage #
+###########
+
+output "k8s_manifests_bucket_url" {
+  value = google_storage_bucket.k8s_manifests.url
+}

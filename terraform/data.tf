@@ -1,5 +1,7 @@
 data "google_client_config" "this" {}
 
+data "google_project" "this" {}
+
 data "http" "caller_ip_response" {
   url = "https://ifconfig.me/ip"
 }

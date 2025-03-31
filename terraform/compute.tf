@@ -42,6 +42,8 @@ resource "google_compute_instance" "elasticsearch" {
   machine_type = "e2-standard-2" # 2 vCPUs, 8 GB memory
   zone         = "${local.gcp_region}-a"
 
+  hostname = "${local.elasticsearch_internal_dns_subdomain}.${local.internal_dns_domain}"
+
   boot_disk {
     initialize_params {
       image = "ubuntu-2404-noble-amd64-v20250313"

@@ -11,7 +11,7 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-### Init
+### Create infrastructure
 
 ```shell
 terraform apply
@@ -71,8 +71,10 @@ kafka-topics.sh --list \
 **FROM BASTION HOST** - `psql` is pre-installed.
 
 ```shell
-psql -h 10.240.0.3 -U root -d visit_manager --password
+psql -h 10.240.0.3 -U <root|user> -d visit_manager --password
 ```
+
+Supply the password via `stdin`. You can get it from terraform output: `terraform output postgres_<root|user>_password`. 
 
 From `psql` shell:
 
@@ -95,3 +97,7 @@ Interact with the cluster using `kubectl`:
 ```shell
 kubectl get pods --all-namespaces
 ```
+
+##### ElasticSearch
+
+TODO
