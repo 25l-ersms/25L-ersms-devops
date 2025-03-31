@@ -1,5 +1,6 @@
 # TODO DNS
 # TODO store creds in secrets manager
+# TODO authenticate using IAM
 
 module "pg" {
   source  = "terraform-google-modules/sql-db/google//modules/postgresql"

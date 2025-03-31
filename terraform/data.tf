@@ -44,7 +44,6 @@ EOF
 }
 
 # TODO only run once with cloud-init
-# TODO set network.host to expose the service in network
 resource "terraform_data" "elasticsearch_startup_script" {
   input = <<EOF
 #!/bin/bash
@@ -57,8 +56,29 @@ echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://arti
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y elasticsearch
 
+# allow inbound connections
+sed -i "s/^#network\.host:.*$/network.host: 0.0.0.0/m" /etc/elasticsearch/elasticsearch.yml
+# prevent other nodes from joining
+echo "discovery.type: single-node" | tee -a /etc/elasticsearch/elasticsearch.yml
+sed -E "s/^(discovery\.seed_hosts:.*)$/#\1/m" -i /etc/elasticsearch/elasticsearch.yml
+sed -E "s/^(cluster\.initial_master_nodes:.*)$/#\1/m" -i /etc/elasticsearch/elasticsearch.yml
+
 systemctl daemon-reload
 systemctl enable elasticsearch.service
 systemctl start elasticsearch.service
+
+# set root user password
+# FIXME startup script logs use xtrace, which leaks the password (lol)
+elastic_password=$(gcloud secrets versions access latest --secret=${google_secret_manager_secret.elasticsearch_root_password.secret_id})
+/usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -i <<< "y
+$elastic_password
+$elastic_password
+"
+
+systemctl daemon-reload
+systemctl restart elasticsearch.service
+
+# upload the self-signed cert to the secret manager
+gcloud secrets versions add ${google_secret_manager_secret.elasticsearch_cacert.secret_id} --data-file=/etc/elasticsearch/certs/http_ca.crt
 EOF
 }

@@ -112,4 +112,27 @@ kubectl exec -it debug-sdk -- bash
 
 ##### ElasticSearch
 
-TODO
+Access elasticsearch host:
+
+```shell
+# gcloud-cli does not provide a straightforward way to do proxyjumps
+eval $(ssh-agent)
+# gcloud's default key has the same password as host's user account
+ssh-add ~/.ssh/google_compute_engine
+ssh "$(whoami)@$(terraform output -raw elasticsearch_private_ip)" -p 22 -J "$(terraform output -raw bastion_ip):2222"
+```
+
+Authenticate and query cluster metadata:
+
+// todo substitute terraform
+
+```shell
+sudo curl --cacert /etc/elasticsearch/certs/http_ca.crt -u "elastic:$(gcloud secrets versions access latest --secret=elasticsearch-root-password)" https://elasticsearch.vpc.internal:9200
+```
+
+You can do the same from the `debug-sdk` pod running on GKE:
+
+```shell
+gcloud secrets versions access latest --secret=elasticsearch-cacert --out-file=/tmp/es_ca.crt
+curl --cacert /tmp/es_ca.crt -u "elastic:$(gcloud secrets versions access latest --secret=elasticsearch-root-password)" https://elasticsearch.vpc.internal:9200
+```

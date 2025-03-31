@@ -47,7 +47,8 @@ fi
 heading "Enabling APIs..."
 (
     set -x
-    gcloud services enable compute.googleapis.com \
+    gcloud services enable \
+        compute.googleapis.com \
         storage.googleapis.com \
         run.googleapis.com \
         cloudbuild.googleapis.com \
@@ -57,7 +58,8 @@ heading "Enabling APIs..."
         container.googleapis.com \
         cloudresourcemanager.googleapis.com \
         dns.googleapis.com \
-        iamcredentials.googleapis.com
+        iamcredentials.googleapis.com \
+        secretmanager.googleapis.com
 )
 
 heading "Initializing terraform..."

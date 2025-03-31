@@ -80,6 +80,18 @@ output "ingress_global_ip_address" {
   value = google_compute_global_address.ingress_external_alb_ip.address
 }
 
+#################
+# ElasticSearch #
+#################
+
+output "elasticsearch_dns_name" {
+  value = trimsuffix(google_dns_record_set.elsasticsearch.name, ".")
+}
+
+output "elasticsearch_private_ip" {
+  value = google_compute_instance.elasticsearch.network_interface[0].network_ip
+}
+
 ###########
 # Storage #
 ###########

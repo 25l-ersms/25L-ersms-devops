@@ -80,7 +80,6 @@ module "gke" {
       logging_variant             = "DEFAULT"
       auto_repair                 = true
       auto_upgrade                = true
-      # service_account             = google_service_account.gke_service_account.email
       preemptible                 = false
       initial_node_count          = 2
     },

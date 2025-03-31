@@ -86,6 +86,39 @@ resource "google_compute_firewall" "vpc_private_internal" {
   source_ranges = [ local.vpc_private_cidr ]
 }
 
+resource "google_compute_firewall" "gke_to_es_inbound" {
+  name    = "${local.prfx}gke-to-es-inbound-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 200
+
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9200", "9300"]
+  }
+
+  source_service_accounts = [ module.gke.service_account ]
+  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+}
+
+resource "google_compute_firewall" "gke_to_es_outbound" {
+  name    = "${local.prfx}gke-to-es-outbound-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 200
+
+  direction = "EGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9200", "9300"]
+  }
+
+  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+}
+
 resource "google_compute_firewall" "bastion_inbound" {
   name    = "${local.prfx}bastion-inbound-firewall"
   network = module.vpc.network_self_link

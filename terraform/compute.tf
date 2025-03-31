@@ -57,7 +57,9 @@ resource "google_compute_instance" "elasticsearch" {
 
   service_account {
     email  = google_service_account.elasticsearch_service_account.email
-    scopes = []
+    scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
   }
 
   allow_stopping_for_update = true
