@@ -56,7 +56,8 @@ heading "Enabling APIs..."
         managedkafka.googleapis.com \
         container.googleapis.com \
         cloudresourcemanager.googleapis.com \
-        dns.googleapis.com
+        dns.googleapis.com \
+        iamcredentials.googleapis.com
 )
 
 heading "Initializing terraform..."

@@ -72,6 +72,14 @@ output "gke_cluster_dns_endpoint" {
   value = module.gke.endpoint_dns
 }
 
+output "ingress_global_ip_name" {
+  value = google_compute_global_address.ingress_external_alb_ip.name
+}
+
+output "ingress_global_ip_address" {
+  value = google_compute_global_address.ingress_external_alb_ip.address
+}
+
 ###########
 # Storage #
 ###########

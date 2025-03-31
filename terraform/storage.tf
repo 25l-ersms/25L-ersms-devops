@@ -17,3 +17,11 @@ resource "google_storage_bucket_object" "k8s_example" {
   })
   bucket = google_storage_bucket.k8s_manifests.name
 }
+
+resource "google_storage_bucket_object" "k8s_debug_sdk" {
+  name   = "debug-sdk.yaml"
+  content = templatefile("${path.module}/files/k8s/debug-sdk.yaml.tftpl", {
+    gcp_service_account = google_service_account.gke_pod_identity.email
+  })
+  bucket = google_storage_bucket.k8s_manifests.name
+}

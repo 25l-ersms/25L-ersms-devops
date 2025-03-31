@@ -1,3 +1,6 @@
+# TODO DNS
+# TODO store creds in secrets manager
+
 module "pg" {
   source  = "terraform-google-modules/sql-db/google//modules/postgresql"
   version = "~> 25.2"
