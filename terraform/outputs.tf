@@ -6,13 +6,21 @@ output "project" {
   value = local.gcp_project_id
 }
 
+###########
+# Bastion #
+###########
+
 output "bastion_ip" {
   value = google_compute_address.bastion_ip.address
 }
 
-#####################
-# VISIT MANAGER SQL #
-#####################
+output "bastion_ssh_port" {
+  value = var.bastion_ssh_port
+}
+
+##############
+# PostgreSQL #
+##############
 
 # Enterprise plus is required... seriously, Google?
 # https://cloud.google.com/sql/docs/mysql/instance-info#view-write-endpoint
@@ -41,16 +49,8 @@ output "postgres_user_password" {
   sensitive = true
 }
 
-#################################
-# VISIT SCHEDULER ELASTICSEARCH #
-#################################
-
-output "elasticsearch_ip" {
-  value = google_compute_instance.elasticsearch.network_interface[0].network_ip
-}
-
 #########
-# KAFKA #
+# Kafka #
 #########
 
 # according to https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart#use_the_kafka_command_line_tools
@@ -92,10 +92,37 @@ output "elasticsearch_private_ip" {
   value = google_compute_instance.elasticsearch.network_interface[0].network_ip
 }
 
+output "elasticsearch_port" {
+  # default
+  value = 9200
+}
+
+output "elasticsearch_root_username" {
+  value = "elastic"
+}
+
+output "elasticsearch_root_password" {
+  value = random_password.elasticsearch_root_password.result
+  sensitive = true
+}
+
+output "elasticsearch_proto" {
+  # default
+  value = "https"
+}
+
+output "elasticsearch_root_password_secret_id" {
+  value = google_secret_manager_secret.elasticsearch_root_password.secret_id
+}
+
+output "elasticsearch_caceret_secret_id" {
+  value = google_secret_manager_secret.elasticsearch_cacert.secret_id
+}
+
 ###########
 # Storage #
 ###########
 
-output "k8s_manifests_bucket_url" {
+output "storage_k8s_manifests_bucket_url" {
   value = google_storage_bucket.k8s_manifests.url
 }
