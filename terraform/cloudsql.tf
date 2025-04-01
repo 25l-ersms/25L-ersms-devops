@@ -1,5 +1,4 @@
 # TODO DNS
-# TODO store creds in secrets manager
 # TODO authenticate using IAM
 
 module "pg" {

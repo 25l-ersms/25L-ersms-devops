@@ -45,7 +45,6 @@ module "vpc" {
   }
 }
 
-# Router and Cloud NAT are required for installing packages from repos (apache, php etc)
 resource "google_compute_router" "group1" {
   name    = "${local.prfx}gw-group1"
   network = module.vpc.network_self_link
@@ -146,7 +145,6 @@ resource "google_compute_firewall" "bastion_outbound_postgres" {
   
   allow {
     protocol = "tcp"
-    # ports    = ["0-65535"]
     ports    = [var.visit_manager_postgres_port]
 
   }
@@ -164,7 +162,6 @@ resource "google_compute_firewall" "bastion_outbound_elasticsearch" {
   
   allow {
     protocol = "tcp"
-    # ports    = ["0-65535"]
     ports    = [9200]
 
   }
@@ -182,7 +179,6 @@ resource "google_compute_firewall" "elasticsearch_inbound" {
   
   allow {
     protocol = "tcp"
-    # ports    = ["0-65535"]
     ports    = [22, 9200]
 
   }

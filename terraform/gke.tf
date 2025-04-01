@@ -85,7 +85,6 @@ module "gke" {
     },
   ]
 
-  # TODO too permissive
   node_pools_oauth_scopes = {
     "all": [
         "https://www.googleapis.com/auth/cloud-platform"
