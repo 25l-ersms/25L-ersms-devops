@@ -20,24 +20,71 @@ terraform apply
 
 ### Test the setup
 
-##### Prerequisite - connect to bastion host
+// TODO automate this
+
+##### Connect to bastion host
 
 ```shell
 gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PREFIX>--bastion" --project "<PROJECT_ID>" -- -p 2222
 ```
 
+##### GKE cluster
+
+Get GKE cluster name: `terraform output gke_cluster_name`
+
+Fetch GKE credentials:
+
+```shell
+# FROM BASTION HOST
+
+gcloud container clusters get-credentials ersms-test-gke --region=<REGION>-a --project=<PROJECT_ID>
+```
+
+Interact with the cluster using `kubectl`:
+
+```shell
+# FROM BASTION HOST
+
+kubectl get pods --all-namespaces
+```
+
+Get manifests bucket name: `terraform output storage_k8s_manifests_bucket_url`
+
+Clone sample configs from cloud storage and apply them:
+
+```shell
+# FROM BASTION HOST
+
+gcloud storage cp --recursive <MANIFESTS_BUCKET_NAME> .
+kubectl apply -f <MANIFESTS_BUCKET_NAME>/
+```
+
+##### Use the debug pod
+
+You can use the `debug-sdk` pod to test access to resources which require specific IAM roles:
+
+```shell
+# FROM BASSTION HOST
+
+kubectl exec -it debug-sdk -- bash
+```
+
+You should be able to complete all of the following checks from both the bastion host and the debug pod.
+
 ##### Kafka
 
 Based on [quickstart guide](https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart).
 
-**FROM BASTION HOST**.
+Get Kafka cluster name: `terraform output kafka_cluster_id`
 
-Setup kafka command line tools:
+Setup Kafka command line tools:
 
 ```shell
+# FROM BASTION HOST
+
 export PROJECT_ID=<PROJECT_ID>
 export REGION=<REGION>
-export CLUSTER_ID=<RESOURCE_PREFIX>-kafka
+export CLUSTER_ID=<KAFKA_CLUSTER_ID>
 
 sudo apt-get install default-jre wget unzip
 
@@ -62,6 +109,8 @@ export BOOTSTRAP=bootstrap.$CLUSTER_ID.$REGION.managedkafka.$PROJECT_ID.cloud.go
 Access Kafka (eg. list topics, refer to guide for more operations). Bastion host is configured with `roles/managedkafka.viewer` and `roles/managedkafka.client` IAM roles, which should be enough to test whether the cluster is reachable.
 
 ```shell
+# FROM BASTION HOST
+
 kafka-topics.sh --list \
 --bootstrap-server $BOOTSTRAP \
 --command-config client.properties
@@ -69,19 +118,23 @@ kafka-topics.sh --list \
 
 ##### PostgreSQL
 
-**FROM BASTION HOST** - `psql` is pre-installed.
-
-Get postgres IP:
+Get postgres IP, password and DB name:
 
 ```shell
 terraform output postgres_ip
+terraform output postgres_root_password
+terraform output postgres_db_name
 ```
+
+Connect to Cloud SQL running Postgres: 
 
 ```shell
-psql -h <POSTGRES_IP> -U <root|user> -d visit_manager --password
+# FROM BASTION HOST
+
+psql -h <POSTGRES_IP> -U root -d <DB_NAME> --password
 ```
 
-Supply the password via `stdin`. You can get it from terraform output: `terraform output postgres_<root|user>_password`. 
+Supply the password via `stdin`.
 
 From `psql` shell:
 
@@ -89,62 +142,44 @@ From `psql` shell:
 SELECT datname FROM pg_database;
 ```
 
-##### GKE cluster
-
-***FROM BASTION HOST***
-
-Get GKE cluster name: `terraform output -raw gke_cluster_name`
-
-Fetch GKE credentials:
-
-```shell
-gcloud container clusters get-credentials ersms-test-gke --region=<REGION>-a --project=<PROJECT_ID>
-```
-
-Interact with the cluster using `kubectl`:
-
-```shell
-kubectl get pods --all-namespaces
-```
-
-Clone sample configs from cloud storage and apply them:
-
-```shell
-gcloud storage cp --recursive <RESOURCE_PREFIX>-k8s-manifests .
-kubectl apply -f <RESOURCE_PREFIX>-k8s-manifests/
-```
-
-You can use the `debug-sdk` pod to test access to resources which require specific IAM roles:
-
-```shell
-kubectl exec -it debug-sdk -- bash
-```
-
 ##### ElasticSearch
 
-Access elasticsearch host:
+Get ElasticSearch DNS name, proto, port, cert secret id, root user username and password secret id: 
 
 ```shell
+terraform output elasticsearch_dns_name
+terraform output elasticsearch_proto
+terraform output elasticsearch_port
+terraform output elasticsearch_caceret_secret_id
+terraform output elasticsearch_root_username
+terraform output elasticsearch_root_password_secret_id
+```
+
+Access ElasticSearch host:
+
+```shell
+# FROM YOUR MACHINE
+
 # gcloud-cli does not provide a straightforward way to do proxyjumps
 eval $(ssh-agent)
 # gcloud's default key has the same password as host's user account
 ssh-add ~/.ssh/google_compute_engine
-ssh "$(whoami)@$(terraform output -raw elasticsearch_private_ip)" -p 22 -J "$(terraform output -raw bastion_ip):2222"
+ssh "$(whoami)@$(terraform output -raw elasticsearch_private_ip)" -p 22 -J "$(terraform output -raw bastion_ip):$(terraform output -raw bastion_ssh_port)"
 ```
 
 Authenticate and query cluster metadata:
 
-// todo substitute terraform
-
 ```shell
-sudo curl --cacert /etc/elasticsearch/certs/http_ca.crt -u "elastic:$(gcloud secrets versions access latest --secret=elasticsearch-root-password)" https://elasticsearch.vpc.internal:9200
+sudo curl --cacert /etc/elasticsearch/certs/http_ca.crt -u "<ES_USER>:$(gcloud secrets versions access latest --secret=<ES_PASSWORD_SECRET_ID>)" <ES_PROTO>://<ES_DNS_NAME>:<ES_PORT>
 ```
 
 You can do the same from the `debug-sdk` pod running on GKE:
 
 ```shell
-gcloud secrets versions access latest --secret=elasticsearch-cacert --out-file=/tmp/es_ca.crt
-curl --cacert /tmp/es_ca.crt -u "elastic:$(gcloud secrets versions access latest --secret=elasticsearch-root-password)" https://elasticsearch.vpc.internal:9200
+# FROM DEBUG POD
+
+gcloud secrets versions access latest --secret=<ES_CERT_SECRET_ID> --out-file=/tmp/es_ca.crt
+curl --cacert /tmp/es_ca.crt -u "<ES_USERNAME>:$(gcloud secrets versions access latest --secret=<ES_PASSWORD_SECRET_ID>)" <ES_PROTO>://<ES_DNS_NAME>:<ES_PORT>
 ```
 
 ### Troubleshooting 

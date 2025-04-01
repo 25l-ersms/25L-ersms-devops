@@ -49,6 +49,10 @@ output "postgres_user_password" {
   sensitive = true
 }
 
+output "postgres_db_name" {
+  value = var.visit_manager_postgres_db_name
+}
+
 #########
 # Kafka #
 #########
@@ -56,6 +60,10 @@ output "postgres_user_password" {
 # according to https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart#use_the_kafka_command_line_tools
 output "kafka_bootstrap_url" {
   value = "bootstrap.${google_managed_kafka_cluster.kafka.cluster_id}.${google_managed_kafka_cluster.kafka.location}.managedkafka.${local.gcp_project_id}.cloud.goog:9092"
+}
+
+output "kafka_cluster_id" {
+  value = google_managed_kafka_cluster.kafka.cluster_id
 }
 
 #######
