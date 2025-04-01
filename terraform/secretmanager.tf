@@ -5,7 +5,7 @@ resource "random_password" "elasticsearch_root_password" {
 }
 
 resource "google_secret_manager_secret" "elasticsearch_root_password" {
-  secret_id = "elasticsearch-root-password"
+  secret_id = "${local.prfx}elasticsearch-root-password"
 
   replication {
     user_managed {
@@ -36,7 +36,7 @@ resource "google_secret_manager_secret_iam_binding" "elasticsearch_root_password
 }
 
 resource "google_secret_manager_secret" "elasticsearch_cacert" {
-  secret_id = "elasticsearch-cacert"
+  secret_id = "${local.prfx}elasticsearch-cacert"
 
   replication {
     user_managed {

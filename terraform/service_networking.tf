@@ -1,5 +1,5 @@
 resource "google_compute_global_address" "private_ip_alloc" {
-  name          = "${local.prfx}-private-ip-alloc"
+  name          = "${local.prfx}private-ip-alloc-vpc-peering"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16

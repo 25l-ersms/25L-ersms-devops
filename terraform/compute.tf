@@ -1,5 +1,5 @@
 resource "google_compute_address" "bastion_ip" {
-  name = "ipv4-address"
+  name = "${local.prfx}bastion-external-ipv4"
 }
 
 resource "google_compute_instance" "bastion" {
@@ -38,7 +38,7 @@ resource "google_compute_instance" "bastion" {
 # GCP does not provide ElasticSearch as a managed service, we'll have to deploy it ourselves
 # TODO mount EBS volume or whatever it's called
 resource "google_compute_instance" "elasticsearch" {
-  name         = "${local.prfx}-elasticsearch"
+  name         = "${local.prfx}elasticsearch"
   machine_type = "e2-standard-2" # 2 vCPUs, 8 GB memory
   zone         = "${local.gcp_region}-a"
 

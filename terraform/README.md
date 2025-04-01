@@ -93,6 +93,8 @@ SELECT datname FROM pg_database;
 
 ***FROM BASTION HOST***
 
+Get GKE cluster name: `terraform output -raw gke_cluster_name`
+
 Fetch GKE credentials:
 
 ```shell

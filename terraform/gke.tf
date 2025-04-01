@@ -65,7 +65,7 @@ module "gke" {
   # nodes
   node_pools = [
     {
-      name               = "default-node-pool"
+      name               = "${local.prfx}default-node-pool"
       machine_type       = "e2-medium"
       node_locations     = "${local.gcp_region}-a"
       min_count          = 1
@@ -93,5 +93,5 @@ module "gke" {
 }
 
 resource "google_compute_global_address" "ingress_external_alb_ip" {
-  name = "ingress-external-alb-ipv4"
+  name = "${local.prfx}ingress-external-alb-ipv4"
 }
