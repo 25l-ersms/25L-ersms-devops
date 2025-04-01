@@ -23,5 +23,5 @@ resource "google_dns_record_set" "elsasticsearch" {
 
   managed_zone = google_dns_managed_zone.internal-zone.name
 
-  rrdatas = [google_compute_instance.elasticsearch.network_interface.0.network_ip]
+  rrdatas = [google_compute_instance.elasticsearch.network_interface[0].network_ip]
 }

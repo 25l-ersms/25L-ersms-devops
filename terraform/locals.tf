@@ -13,8 +13,6 @@ locals {
   vpc_ip_range_gke_services      = "vpc-ip-range-gke-services"
   vpc_ip_range_gke_services_cidr = "10.40.64.0/18"
 
-  iam_account_domain = "${local.gcp_project_id}.iam.gserviceaccount.com"
-
   internal_dns_domain                  = "vpc.internal"
   elasticsearch_internal_dns_subdomain = "elasticsearch"
 }

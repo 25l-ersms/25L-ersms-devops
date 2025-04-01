@@ -1,5 +1,6 @@
 module "gke" {
   source             = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
+  version            = "~> 36.1"
   project_id         = local.gcp_project_id
   name               = "${local.prfx}gke"
   region             = local.gcp_region

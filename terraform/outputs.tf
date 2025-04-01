@@ -110,7 +110,7 @@ output "elasticsearch_root_username" {
 }
 
 output "elasticsearch_root_password" {
-  value = random_password.elasticsearch_root_password.result
+  value     = random_password.elasticsearch_root_password.result
   sensitive = true
 }
 

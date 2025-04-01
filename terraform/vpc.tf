@@ -111,7 +111,7 @@ resource "google_compute_firewall" "bastion_inbound" {
 
   allow {
     protocol = "tcp"
-    ports    = ["${var.bastion_ssh_port}"]
+    ports    = [var.bastion_ssh_port]
   }
 
   source_ranges           = ["${local.caller_ip}/32"]

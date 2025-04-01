@@ -29,7 +29,7 @@ resource "google_project_iam_binding" "kafka_service_account_iam_binding" {
 
   members = [
     google_service_account.bastion_service_account.member,
-    "${google_service_account.gke_pod_identity.member}"
+    google_service_account.gke_pod_identity.member
   ]
 }
 
