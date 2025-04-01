@@ -22,16 +22,22 @@ resource "google_secret_manager_secret_version" "elasticsearch_root_password_ini
   is_secret_data_base64 = true
 }
 
-resource "google_secret_manager_secret_iam_binding" "elasticsearch_root_password_elsasticsearch_binding" {
-  for_each = toset([
-    "roles/secretmanager.secretAccessor",
-    "roles/secretmanager.secretVersionAdder"
-  ])
+resource "google_secret_manager_secret_iam_binding" "elasticsearch_root_password_elsasticsearch_secretaccessor_binding" {
   project   = local.gcp_project_id
   secret_id = google_secret_manager_secret.elasticsearch_root_password.secret_id
-  role      = each.value
+  role      = "roles/secretmanager.secretAccessor"
   members = [
-    google_service_account.elasticsearch_service_account.member
+    google_service_account.elasticsearch_service_account.member,
+    google_service_account.gke_pod_identity.member
+  ]
+}
+
+resource "google_secret_manager_secret_iam_binding" "elasticsearch_root_password_elsasticsearch_secretversionadder_binding" {
+  project   = local.gcp_project_id
+  secret_id = google_secret_manager_secret.elasticsearch_root_password.secret_id
+  role      = "roles/secretmanager.secretVersionAdder"
+  members = [
+    google_service_account.elasticsearch_service_account.member,
   ]
 }
 
@@ -47,16 +53,22 @@ resource "google_secret_manager_secret" "elasticsearch_cacert" {
   }
 }
 
-resource "google_secret_manager_secret_iam_binding" "elasticsearch_cacert_elsasticsearch_binding" {
-  for_each = toset([
-    "roles/secretmanager.secretAccessor",
-    "roles/secretmanager.secretVersionAdder"
-  ])
+resource "google_secret_manager_secret_iam_binding" "elasticsearch_cacert_elsasticsearch_secretaccessor_binding" {
   project   = local.gcp_project_id
   secret_id = google_secret_manager_secret.elasticsearch_cacert.secret_id
-  role      = each.value
+  role      = "roles/secretmanager.secretAccessor"
   members = [
-    google_service_account.elasticsearch_service_account.member
+    google_service_account.elasticsearch_service_account.member,
+    google_service_account.gke_pod_identity.member
+  ]
+}
+
+resource "google_secret_manager_secret_iam_binding" "elasticsearch_cacert_elsasticsearch_secretversionadder_binding" {
+  project   = local.gcp_project_id
+  secret_id = google_secret_manager_secret.elasticsearch_cacert.secret_id
+  role      = "roles/secretmanager.secretVersionAdder"
+  members = [
+    google_service_account.elasticsearch_service_account.member,
   ]
 }
 
@@ -78,6 +90,16 @@ resource "google_secret_manager_secret_version" "postgres_root_password_initial"
   is_secret_data_base64 = true
 }
 
+resource "google_secret_manager_secret_iam_binding" "postgres_root_password_secretaccessor_binding" {
+  project   = local.gcp_project_id
+  secret_id = google_secret_manager_secret.postgres_root_password.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  members = [
+    google_service_account.elasticsearch_service_account.member,
+    google_service_account.gke_pod_identity.member
+  ]
+}
+
 resource "google_secret_manager_secret" "postgres_user_password" {
   secret_id = "${local.prfx}postgres-user-password"
 
@@ -96,17 +118,12 @@ resource "google_secret_manager_secret_version" "postgres_user_password_initial"
   is_secret_data_base64 = true
 }
 
-resource "google_secret_manager_secret_iam_binding" "gke_pod_identity_binding" {
-  for_each = toset([
-    google_secret_manager_secret.elasticsearch_root_password.secret_id,
-    google_secret_manager_secret.elasticsearch_cacert.secret_id,
-    google_secret_manager_secret.postgres_root_password.secret_id,
-    google_secret_manager_secret.postgres_user_password.secret_id
-  ])
+resource "google_secret_manager_secret_iam_binding" "postgres_user_password_secretaccessor_binding" {
   project   = local.gcp_project_id
-  secret_id = each.value
+  secret_id = google_secret_manager_secret.postgres_user_password.secret_id
   role      = "roles/secretmanager.secretAccessor"
   members = [
+    google_service_account.elasticsearch_service_account.member,
     google_service_account.gke_pod_identity.member
   ]
 }
