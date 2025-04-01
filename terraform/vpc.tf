@@ -7,28 +7,28 @@ module "vpc" {
   routing_mode = "REGIONAL"
 
   subnets = [
-      {
-          subnet_name               = "${local.prfx}private-subnet"
-          subnet_ip                 = local.vpc_private_cidr
-          subnet_region             = local.gcp_region
-          subnet_private_access     = true
-          # enable if needed
-          # subnet_flow_logs          = "true"
-          # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-          # subnet_flow_logs_sampling = 0.7
-          # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-      },
-      {
-          subnet_name               = "${local.prfx}public-subnet"
-          subnet_ip                 = local.vpc_public_cidr
-          subnet_region             = local.gcp_region
-          subnet_private_access     = true
-          # enable if needed
-          # subnet_flow_logs          = "true"
-          # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-          # subnet_flow_logs_sampling = 0.7
-          # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
-      }
+    {
+      subnet_name           = "${local.prfx}private-subnet"
+      subnet_ip             = local.vpc_private_cidr
+      subnet_region         = local.gcp_region
+      subnet_private_access = true
+      # enable if needed
+      # subnet_flow_logs          = "true"
+      # subnet_flow_logs_interval = "INTERVAL_10_MIN"
+      # subnet_flow_logs_sampling = 0.7
+      # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+    },
+    {
+      subnet_name           = "${local.prfx}public-subnet"
+      subnet_ip             = local.vpc_public_cidr
+      subnet_region         = local.gcp_region
+      subnet_private_access = true
+      # enable if needed
+      # subnet_flow_logs          = "true"
+      # subnet_flow_logs_interval = "INTERVAL_10_MIN"
+      # subnet_flow_logs_sampling = 0.7
+      # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
+    }
   ]
 
   secondary_ranges = {
@@ -82,7 +82,7 @@ resource "google_compute_firewall" "vpc_private_internal" {
     ports    = ["0-65535"]
   }
 
-  source_ranges = [ local.vpc_private_cidr ]
+  source_ranges = [local.vpc_private_cidr]
 }
 
 resource "google_compute_firewall" "gke_to_es_inbound" {
@@ -98,8 +98,8 @@ resource "google_compute_firewall" "gke_to_es_inbound" {
     ports    = ["9200", "9300"]
   }
 
-  source_service_accounts = [ module.gke.service_account ]
-  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+  source_service_accounts = [module.gke.service_account]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
 }
 
 resource "google_compute_firewall" "gke_to_es_outbound" {
@@ -115,7 +115,7 @@ resource "google_compute_firewall" "gke_to_es_outbound" {
     ports    = ["9200", "9300"]
   }
 
-  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
 }
 
 resource "google_compute_firewall" "bastion_inbound" {
@@ -125,14 +125,14 @@ resource "google_compute_firewall" "bastion_inbound" {
   priority = 100
 
   direction = "INGRESS"
-  
+
   allow {
     protocol = "tcp"
     ports    = ["${var.bastion_ssh_port}"]
   }
 
-  source_ranges = [ "${local.caller_ip}/32" ]
-  target_service_accounts = [ google_service_account.bastion_service_account.email ]
+  source_ranges           = ["${local.caller_ip}/32"]
+  target_service_accounts = [google_service_account.bastion_service_account.email]
 }
 
 resource "google_compute_firewall" "bastion_outbound_postgres" {
@@ -142,14 +142,14 @@ resource "google_compute_firewall" "bastion_outbound_postgres" {
   priority = 100
 
   direction = "EGRESS"
-  
+
   allow {
     protocol = "tcp"
     ports    = [var.visit_manager_postgres_port]
 
   }
 
-  target_service_accounts = [ module.pg.instance_service_account_email_address ]
+  target_service_accounts = [module.pg.instance_service_account_email_address]
 }
 
 resource "google_compute_firewall" "bastion_outbound_elasticsearch" {
@@ -159,14 +159,14 @@ resource "google_compute_firewall" "bastion_outbound_elasticsearch" {
   priority = 100
 
   direction = "EGRESS"
-  
+
   allow {
     protocol = "tcp"
     ports    = [9200]
 
   }
 
-  target_service_accounts = [ google_service_account.elasticsearch_service_account.email ]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
 }
 
 resource "google_compute_firewall" "elasticsearch_inbound" {
@@ -176,12 +176,12 @@ resource "google_compute_firewall" "elasticsearch_inbound" {
   priority = 100
 
   direction = "INGRESS"
-  
+
   allow {
     protocol = "tcp"
     ports    = [22, 9200]
 
   }
 
-  source_service_accounts = [ google_service_account.bastion_service_account.email ]
+  source_service_accounts = [google_service_account.bastion_service_account.email]
 }

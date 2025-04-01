@@ -11,7 +11,7 @@ resource "google_storage_bucket" "k8s_manifests" {
 }
 
 resource "google_storage_bucket_object" "k8s_example" {
-  name   = "example.yaml"
+  name = "example.yaml"
   content = templatefile("${path.module}/files/k8s/example.yaml.tftpl", {
     ingress_external_ip_name = google_compute_global_address.ingress_external_alb_ip.name
   })
@@ -19,7 +19,7 @@ resource "google_storage_bucket_object" "k8s_example" {
 }
 
 resource "google_storage_bucket_object" "k8s_debug_sdk" {
-  name   = "debug-sdk.yaml"
+  name = "debug-sdk.yaml"
   content = templatefile("${path.module}/files/k8s/debug-sdk.yaml.tftpl", {
     gcp_service_account = google_service_account.gke_pod_identity.email
   })

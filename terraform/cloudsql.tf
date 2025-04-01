@@ -10,7 +10,7 @@ module "pg" {
   project_id           = local.gcp_project_id
   database_version     = var.visit_manager_postgres_version
   region               = local.gcp_region
-  edition = "ENTERPRISE"
+  edition              = "ENTERPRISE"
 
   // Master configurations
   tier                            = "db-custom-1-3840"
@@ -22,14 +22,14 @@ module "pg" {
 
   deletion_protection = false
 
-#   database_flags = [{ name = "autovacuum", value = "off" }]
+  #   database_flags = [{ name = "autovacuum", value = "off" }]
 
 
   ip_configuration = {
-    ipv4_enabled       = false
-    ssl_mode           = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" // can also be ENCRYPTED_ONLY
-    private_network    = module.vpc.network_self_link
-    allocated_ip_range = google_compute_global_address.private_ip_alloc.name
+    ipv4_enabled        = false
+    ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" // can also be ENCRYPTED_ONLY
+    private_network     = module.vpc.network_self_link
+    allocated_ip_range  = google_compute_global_address.private_ip_alloc.name
     authorized_networks = []
   }
 
@@ -44,23 +44,23 @@ module "pg" {
   }
 
   // Read replica configurations
-#   read_replica_name_suffix = "-test-ha"
-#   read_replicas = [
-#     {
-#       name                  = "0"
-#       zone                  = "us-central1-a"
-#       availability_type     = "REGIONAL"
-#       tier                  = "db-custom-1-3840"
-#       ip_configuration      = local.read_replica_ip_configuration
-#       database_flags        = [{ name = "autovacuum", value = "off" }]
-#       disk_autoresize       = null
-#       disk_autoresize_limit = null
-#       disk_size             = null
-#       disk_type             = "PD_HDD"
-#       user_labels           = { bar = "baz" }
-#       encryption_key_name   = null
-#     },
-#   ]
+  #   read_replica_name_suffix = "-test-ha"
+  #   read_replicas = [
+  #     {
+  #       name                  = "0"
+  #       zone                  = "us-central1-a"
+  #       availability_type     = "REGIONAL"
+  #       tier                  = "db-custom-1-3840"
+  #       ip_configuration      = local.read_replica_ip_configuration
+  #       database_flags        = [{ name = "autovacuum", value = "off" }]
+  #       disk_autoresize       = null
+  #       disk_autoresize_limit = null
+  #       disk_size             = null
+  #       disk_type             = "PD_HDD"
+  #       user_labels           = { bar = "baz" }
+  #       encryption_key_name   = null
+  #     },
+  #   ]
 
   db_name      = var.visit_manager_postgres_db_name
   db_charset   = "UTF8"
@@ -77,18 +77,18 @@ module "pg" {
     },
   ]
 
-  depends_on = [ google_service_networking_connection.default ]
+  depends_on = [google_service_networking_connection.default]
 }
 
 resource "random_password" "visit_manager_postgres_generated_password_root" {
-  count = var.visit_manager_postgres_root_password == null ? 1 : 0
+  count            = var.visit_manager_postgres_root_password == null ? 1 : 0
   length           = 16
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 resource "random_password" "visit_manager_postgres_generated_password_user" {
-  count = var.visit_manager_postgres_user_password == null ? 1 : 0
+  count            = var.visit_manager_postgres_user_password == null ? 1 : 0
   length           = 16
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"

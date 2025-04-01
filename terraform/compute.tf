@@ -14,7 +14,7 @@ resource "google_compute_instance" "bastion" {
   }
 
   network_interface {
-    network = module.vpc.network_self_link
+    network    = module.vpc.network_self_link
     subnetwork = module.vpc.subnets["${local.gcp_region}/${var.resource_prefix}-public-subnet"].self_link
     access_config {
       nat_ip = google_compute_address.bastion_ip.address
@@ -22,7 +22,7 @@ resource "google_compute_instance" "bastion" {
   }
 
   service_account {
-    email  = google_service_account.bastion_service_account.email
+    email = google_service_account.bastion_service_account.email
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
@@ -31,7 +31,7 @@ resource "google_compute_instance" "bastion" {
   allow_stopping_for_update = true
 
   metadata = {
-    "startup-script": resource.terraform_data.bastion_startup_script.output
+    "startup-script" : resource.terraform_data.bastion_startup_script.output
   }
 }
 
@@ -51,12 +51,12 @@ resource "google_compute_instance" "elasticsearch" {
   }
 
   network_interface {
-    network = module.vpc.network_self_link
+    network    = module.vpc.network_self_link
     subnetwork = module.vpc.subnets["${local.gcp_region}/${var.resource_prefix}-private-subnet"].self_link
   }
 
   service_account {
-    email  = google_service_account.elasticsearch_service_account.email
+    email = google_service_account.elasticsearch_service_account.email
     scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
@@ -65,6 +65,6 @@ resource "google_compute_instance" "elasticsearch" {
   allow_stopping_for_update = true
 
   metadata = {
-    "startup-script": resource.terraform_data.elasticsearch_startup_script.output
+    "startup-script" : resource.terraform_data.elasticsearch_startup_script.output
   }
 }

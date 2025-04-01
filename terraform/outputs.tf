@@ -28,7 +28,7 @@ output "postgres_root_username" {
 }
 
 output "postgres_root_password" {
-  value = coalesce(var.visit_manager_postgres_root_password, random_password.visit_manager_postgres_generated_password_root[0].result)
+  value     = coalesce(var.visit_manager_postgres_root_password, random_password.visit_manager_postgres_generated_password_root[0].result)
   sensitive = true
 }
 
@@ -37,7 +37,7 @@ output "postgres_user_username" {
 }
 
 output "postgres_user_password" {
-  value = module.pg.additional_users[0].password
+  value     = module.pg.additional_users[0].password
   sensitive = true
 }
 
@@ -46,7 +46,7 @@ output "postgres_user_password" {
 #################################
 
 output "elasticsearch_ip" {
-  value = google_compute_instance.elasticsearch.network_interface[0].network_ip 
+  value = google_compute_instance.elasticsearch.network_interface[0].network_ip
 }
 
 #########
