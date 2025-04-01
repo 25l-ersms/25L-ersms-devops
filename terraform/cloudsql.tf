@@ -12,7 +12,6 @@ module "pg" {
   region               = local.gcp_region
   edition              = "ENTERPRISE"
 
-  // Master configurations
   tier                            = "db-custom-1-3840"
   zone                            = "${local.gcp_region}-a"
   availability_type               = "ZONAL"
@@ -22,12 +21,12 @@ module "pg" {
 
   deletion_protection = false
 
-  #   database_flags = [{ name = "autovacuum", value = "off" }]
 
 
   ip_configuration = {
     ipv4_enabled        = false
-    ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" // can also be ENCRYPTED_ONLY
+    # can also be ENCRYPTED_ONLY
+    ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" 
     private_network     = module.vpc.network_self_link
     allocated_ip_range  = google_compute_global_address.private_ip_alloc.name
     authorized_networks = []
@@ -42,25 +41,6 @@ module "pg" {
     retained_backups               = 365
     retention_unit                 = "COUNT"
   }
-
-  // Read replica configurations
-  #   read_replica_name_suffix = "-test-ha"
-  #   read_replicas = [
-  #     {
-  #       name                  = "0"
-  #       zone                  = "us-central1-a"
-  #       availability_type     = "REGIONAL"
-  #       tier                  = "db-custom-1-3840"
-  #       ip_configuration      = local.read_replica_ip_configuration
-  #       database_flags        = [{ name = "autovacuum", value = "off" }]
-  #       disk_autoresize       = null
-  #       disk_autoresize_limit = null
-  #       disk_size             = null
-  #       disk_type             = "PD_HDD"
-  #       user_labels           = { bar = "baz" }
-  #       encryption_key_name   = null
-  #     },
-  #   ]
 
   db_name      = var.visit_manager_postgres_db_name
   db_charset   = "UTF8"

@@ -12,22 +12,12 @@ module "vpc" {
       subnet_ip             = local.vpc_private_cidr
       subnet_region         = local.gcp_region
       subnet_private_access = true
-      # enable if needed
-      # subnet_flow_logs          = "true"
-      # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-      # subnet_flow_logs_sampling = 0.7
-      # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
     },
     {
       subnet_name           = "${local.prfx}public-subnet"
       subnet_ip             = local.vpc_public_cidr
       subnet_region         = local.gcp_region
       subnet_private_access = true
-      # enable if needed
-      # subnet_flow_logs          = "true"
-      # subnet_flow_logs_interval = "INTERVAL_10_MIN"
-      # subnet_flow_logs_sampling = 0.7
-      # subnet_flow_logs_metadata = "INCLUDE_ALL_METADATA"
     }
   ]
 
