@@ -202,3 +202,7 @@ Example error message:
 
 - If you have not ran `setup.sh` yet, now it's time to do it (the script is idempotent, you can re-run it anytime)
 - Otherwise, just wait a few minutes :/ some APIs need a few minutes to *actually* become accessible despite showing up as enabled
+
+#### Timeout when SSH-ing to bastion
+
+Terraform creates a ~~security group~~ firewall rule which allows inbound TCP on port 2222 (default) **only from your current IP**. The IP is checked when applying the config. If you expect it could change, simply rerun `terraform apply`.
