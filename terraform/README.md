@@ -2,7 +2,8 @@
 
 ### Prerequisites
 
-`gcloud` CLI authenticated and pointing to the desired project.
+- Google Cloud project with billing enabled ([guide](https://developers.google.com/workspace/guides/create-project))
+- `gcloud` CLI authenticated and pointing to the desired project.
 
 ### Setup
 
@@ -104,7 +105,14 @@ Interact with the cluster using `kubectl`:
 kubectl get pods --all-namespaces
 ```
 
-You can also use the `debug-sdk` pod to test access to resources which require specific IAM roles:
+Clone sample configs from cloud storage and apply them:
+
+```shell
+gcloud storage cp --recursive <RESOURCE_PREFIX>-k8s-manifests .
+kubectl apply -f <RESOURCE_PREFIX>-k8s-manifests/
+```
+
+You can use the `debug-sdk` pod to test access to resources which require specific IAM roles:
 
 ```shell
 kubectl exec -it debug-sdk -- bash
@@ -136,3 +144,24 @@ You can do the same from the `debug-sdk` pod running on GKE:
 gcloud secrets versions access latest --secret=elasticsearch-cacert --out-file=/tmp/es_ca.crt
 curl --cacert /tmp/es_ca.crt -u "elastic:$(gcloud secrets versions access latest --secret=elasticsearch-root-password)" https://elasticsearch.vpc.internal:9200
 ```
+
+### Troubleshooting 
+
+#### Resource already being used when executing `terraform destroy`
+
+Example error message:
+
+> Error when reading or editing Subnetwork: googleapi: Error 400: The subnetwork resource '<...>/subnetworks/<...>-private-subnet'' is already being used by '<...>/forwardingRules/<...>', resourceInUseByAnotherResource
+
+- Go to https://console.cloud.google.com/net-services/loadbalancing/list/loadBalancers and delete all load balancers
+- Go to https://console.cloud.google.com/net-security/firewall-manager/firewall-policies/list and delete all firewall rules **which do not start with _default_**
+- Go to https://console.cloud.google.com/compute/networkendpointgroups/list and delete all network endpoint groups
+
+#### API has not been used in project before or it is disabled
+
+Example error message: 
+
+> Error: Error creating service account: googleapi: Error 403: <...> API has not been used in project [PROJECT-NUMBER] before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/iam.googleapis.com/overview?project=[PROJECT-NUMBER] then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry., accessNotConfigured
+
+- If you have not ran `setup.sh` yet, now it's time to do it (the script is idempotent, you can re-run it anytime)
+- Otherwise, just wait a few minutes :/ some APIs need a few minutes to *actually* become accessible despite showing up as enabled
