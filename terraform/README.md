@@ -1,9 +1,14 @@
-# ERSMS
+# ERSMS terraform
+
+![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)           
 
 ### Prerequisites
 
 - Google Cloud project with billing enabled ([guide](https://developers.google.com/workspace/guides/create-project))
 - `gcloud` CLI authenticated and pointing to the desired project.
+  - `gcloud config set project <PROJECT_ID>`
+  - `gcloud auth application-default login`
+- [`terraform`](https://developer.hashicorp.com/terraform/install?product_intent=terraform) version `>=1.10.0`
 
 ### Setup
 
@@ -206,3 +211,11 @@ Example error message:
 #### Timeout when SSH-ing to bastion
 
 Terraform creates a ~~security group~~ firewall rule which allows inbound TCP on port 2222 (default) **only from your current IP**. The IP is checked when applying the config. If you expect it could change, simply rerun `terraform apply`.
+
+#### Google could not find default credentials
+
+Example error message:
+
+> storage.NewClient() failed: dialing: google: could not find default credentials. See https://cloud.google.com/docs/authentication/external/set-up-adc for more information
+
+Terraform's Google provider is configured to use default `gcloud` credentials. If you have not configured them, run `gcloud auth application-default login`.
