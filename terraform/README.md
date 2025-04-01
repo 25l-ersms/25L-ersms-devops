@@ -25,7 +25,7 @@ terraform apply
 ##### Connect to bastion host
 
 ```shell
-gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PREFIX>--bastion" --project "<PROJECT_ID>" -- -p 2222
+gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PREFIX>-bastion" --project "<PROJECT_ID>" -- -p 2222
 ```
 
 ##### GKE cluster
@@ -86,7 +86,7 @@ export PROJECT_ID=<PROJECT_ID>
 export REGION=<REGION>
 export CLUSTER_ID=<KAFKA_CLUSTER_ID>
 
-sudo apt-get install default-jre wget unzip
+DEBIAN_FRONTEND=noninteractive sudo apt-get install -y default-jre wget unzip
 
 wget -O kafka_2.13-3.7.2.tgz  https://downloads.apache.org/kafka/3.7.2/kafka_2.13-3.7.2.tgz
 tar xfz kafka_2.13-3.7.2.tgz

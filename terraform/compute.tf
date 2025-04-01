@@ -3,7 +3,7 @@ resource "google_compute_address" "bastion_ip" {
 }
 
 resource "google_compute_instance" "bastion" {
-  name         = "${local.prfx}-bastion"
+  name         = "${local.prfx}bastion"
   machine_type = "e2-micro"
   zone         = "${local.gcp_region}-a"
 

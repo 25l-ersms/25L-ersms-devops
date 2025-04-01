@@ -85,23 +85,6 @@ resource "google_compute_firewall" "vpc_private_internal" {
   source_ranges = [local.vpc_private_cidr]
 }
 
-resource "google_compute_firewall" "gke_to_es_inbound" {
-  name    = "${local.prfx}gke-to-es-inbound-firewall"
-  network = module.vpc.network_self_link
-
-  priority = 200
-
-  direction = "INGRESS"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["9200", "9300"]
-  }
-
-  source_service_accounts = [module.gke.service_account]
-  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
-}
-
 resource "google_compute_firewall" "gke_to_es_outbound" {
   name    = "${local.prfx}gke-to-es-outbound-firewall"
   network = module.vpc.network_self_link
@@ -112,10 +95,10 @@ resource "google_compute_firewall" "gke_to_es_outbound" {
 
   allow {
     protocol = "tcp"
-    ports    = ["9200", "9300"]
+    ports    = [9200, 9300]
   }
 
-  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
+  target_service_accounts = [module.gke.service_account]
 }
 
 resource "google_compute_firewall" "bastion_inbound" {
@@ -169,19 +152,62 @@ resource "google_compute_firewall" "bastion_outbound_elasticsearch" {
   target_service_accounts = [google_service_account.elasticsearch_service_account.email]
 }
 
-resource "google_compute_firewall" "elasticsearch_inbound" {
-  name    = "${local.prfx}elasticsearch-inblund-firewall"
+resource "google_compute_firewall" "elasticsearch_inbound_ssh" {
+  name    = "${local.prfx}elasticsearch-ssh-inbound-firewall"
   network = module.vpc.network_self_link
 
-  priority = 100
+  priority = 123
 
   direction = "INGRESS"
 
   allow {
     protocol = "tcp"
-    ports    = [22, 9200]
+    ports    = [22]
 
   }
 
-  source_service_accounts = [google_service_account.bastion_service_account.email]
+  source_service_accounts = [
+    google_service_account.bastion_service_account.email
+  ]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
+}
+
+resource "google_compute_firewall" "elasticsearch_inbound_https_bastion" {
+  name    = "${local.prfx}elasticsearch-https-inbound-bastion-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 123
+
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = [9200, 9300]
+  }
+
+  source_service_accounts = [
+    google_service_account.bastion_service_account.email,
+  ]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
+}
+
+# GKE does not work with service accounts... for some reason
+resource "google_compute_firewall" "elasticsearch_inbound_https_gke" {
+  name    = "${local.prfx}elasticsearch-https-inbound-gke-firewall"
+  network = module.vpc.network_self_link
+
+  priority = 123
+
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = [9200, 9300]
+  }
+
+  source_ranges = [
+    local.vpc_ip_range_gke_pods_cidr,
+    local.vpc_ip_range_gke_services_cidr
+  ]
+  target_service_accounts = [google_service_account.elasticsearch_service_account.email]
 }
