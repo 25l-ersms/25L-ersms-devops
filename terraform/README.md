@@ -69,8 +69,7 @@ kubectl apply -f <MANIFESTS_BUCKET_NAME>/
 You can use the `debug-sdk` pod to test access to resources which require specific IAM roles:
 
 ```shell
-# FROM BASSTION HOST
-
+# FROM BASTION HOST
 kubectl exec -it debug-sdk -- bash
 ```
 
