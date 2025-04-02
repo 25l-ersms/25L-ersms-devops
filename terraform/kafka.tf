@@ -4,8 +4,8 @@ resource "google_managed_kafka_cluster" "kafka" {
   project    = local.gcp_project_id
 
   capacity_config {
-    vcpu_count   = 3
-    memory_bytes = 3221225472
+    vcpu_count   = var.kafka_vpcu_count
+    memory_bytes = var.kafka_memory_bytes
   }
   gcp_config {
     access_config {

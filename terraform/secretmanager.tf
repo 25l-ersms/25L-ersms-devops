@@ -72,6 +72,20 @@ resource "google_secret_manager_secret_iam_binding" "elasticsearch_cacert_elsast
   ]
 }
 
+resource "random_password" "visit_manager_postgres_generated_password_root" {
+  count            = var.visit_manager_postgres_root_password == null ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_password" "visit_manager_postgres_generated_password_user" {
+  count            = var.visit_manager_postgres_user_password == null ? 1 : 0
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 resource "google_secret_manager_secret" "postgres_root_password" {
   secret_id = "${local.prfx}postgres-root-password"
 

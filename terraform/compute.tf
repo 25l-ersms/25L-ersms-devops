@@ -4,7 +4,7 @@ resource "google_compute_address" "bastion_ip" {
 
 resource "google_compute_instance" "bastion" {
   name         = "${local.prfx}bastion"
-  machine_type = "e2-micro"
+  machine_type = var.bastion_instance_size
   zone         = "${local.gcp_region}-a"
 
   boot_disk {
@@ -39,7 +39,7 @@ resource "google_compute_instance" "bastion" {
 # TODO mount EBS volume or whatever it's called
 resource "google_compute_instance" "elasticsearch" {
   name         = "${local.prfx}elasticsearch"
-  machine_type = "e2-standard-2" # 2 vCPUs, 8 GB memory
+  machine_type = var.elasticsearch_instance_size
   zone         = "${local.gcp_region}-a"
 
   hostname = "${local.elasticsearch_internal_dns_subdomain}.${local.internal_dns_domain}"

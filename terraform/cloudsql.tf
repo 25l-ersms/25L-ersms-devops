@@ -12,7 +12,7 @@ module "pg" {
   region               = local.gcp_region
   edition              = "ENTERPRISE"
 
-  tier                            = "db-custom-1-3840"
+  tier                            = var.visit_manager_postgres_instance_size
   zone                            = "${local.gcp_region}-a"
   availability_type               = "ZONAL"
   maintenance_window_day          = 7
@@ -60,16 +60,3 @@ module "pg" {
   depends_on = [google_service_networking_connection.default]
 }
 
-resource "random_password" "visit_manager_postgres_generated_password_root" {
-  count            = var.visit_manager_postgres_root_password == null ? 1 : 0
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
-resource "random_password" "visit_manager_postgres_generated_password_user" {
-  count            = var.visit_manager_postgres_user_password == null ? 1 : 0
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}

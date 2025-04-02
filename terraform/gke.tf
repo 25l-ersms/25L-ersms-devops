@@ -67,10 +67,10 @@ module "gke" {
   node_pools = [
     {
       name               = "${local.prfx}default-node-pool"
-      machine_type       = "e2-medium"
+      machine_type       = var.gke_instance_size
       node_locations     = "${local.gcp_region}-a"
-      min_count          = 1
-      max_count          = 3
+      min_count          = var.gke_min_nodes
+      max_count          = var.gke_max_nodes
       local_ssd_count    = 0
       spot               = false
       disk_size_gb       = 50
@@ -82,7 +82,7 @@ module "gke" {
       auto_repair        = true
       auto_upgrade       = true
       preemptible        = false
-      initial_node_count = 2
+      initial_node_count = var.gke_initial_nodes
     },
   ]
 
