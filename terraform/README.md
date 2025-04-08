@@ -218,3 +218,144 @@ Example error message:
 > storage.NewClient() failed: dialing: google: could not find default credentials. See https://cloud.google.com/docs/authentication/external/set-up-adc for more information
 
 Terraform's Google provider is configured to use default `gcloud` credentials. If you have not configured them, run `gcloud auth application-default login`.
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.10 |
+| <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | ~> 2.3 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 6.8 |
+| <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.4 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.7 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | 6.27.0 |
+| <a name="provider_http"></a> [http](#provider\_http) | 3.4.5 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cloud-nat-group1"></a> [cloud-nat-group1](#module\_cloud-nat-group1) | terraform-google-modules/cloud-nat/google | ~> 5.0 |
+| <a name="module_gke"></a> [gke](#module\_gke) | terraform-google-modules/kubernetes-engine/google//modules/private-cluster | ~> 36.1 |
+| <a name="module_pg"></a> [pg](#module\_pg) | terraform-google-modules/sql-db/google//modules/postgresql | ~> 25.2 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-google-modules/network/google | ~> 10.0 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [google_compute_address.bastion_ip](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
+| [google_compute_firewall.bastion_inbound](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.bastion_outbound_elasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.bastion_outbound_postgres](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.elasticsearch_inbound_https_bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.elasticsearch_inbound_https_gke](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.elasticsearch_inbound_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.gke_to_es_outbound](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_firewall.vpc_private_internal](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
+| [google_compute_global_address.ingress_external_alb_ip](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_address) | resource |
+| [google_compute_global_address.private_ip_alloc](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_address) | resource |
+| [google_compute_instance.bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
+| [google_compute_instance.elasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
+| [google_compute_router.group1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router) | resource |
+| [google_dns_managed_zone.internal-zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) | resource |
+| [google_dns_record_set.elsasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) | resource |
+| [google_managed_kafka_cluster.kafka](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/managed_kafka_cluster) | resource |
+| [google_managed_kafka_topic.dummy](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/managed_kafka_topic) | resource |
+| [google_project_iam_binding.bastion_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.gke_iam_workflow_identity_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.gke_ingress_controller_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.kafka_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_secret_manager_secret.elasticsearch_cacert](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.elasticsearch_root_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.postgres_root_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.postgres_user_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret_iam_binding.elasticsearch_cacert_elsasticsearch_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_iam_binding.elasticsearch_cacert_elsasticsearch_secretversionadder_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_iam_binding.elasticsearch_root_password_elsasticsearch_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_iam_binding.elasticsearch_root_password_elsasticsearch_secretversionadder_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_iam_binding.postgres_root_password_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_iam_binding.postgres_user_password_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
+| [google_secret_manager_secret_version.elasticsearch_root_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.postgres_root_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.postgres_user_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_service_account.bastion_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.elasticsearch_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_networking_connection.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_networking_connection) | resource |
+| [google_storage_bucket.k8s_manifests](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
+| [google_storage_bucket_object.k8s_debug_sdk](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
+| [google_storage_bucket_object.k8s_example](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_object) | resource |
+| [random_password.elasticsearch_root_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [random_password.visit_manager_postgres_generated_password_root](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [random_password.visit_manager_postgres_generated_password_user](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+| [terraform_data.bastion_startup_script](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
+| [terraform_data.elasticsearch_startup_script](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) | resource |
+| [google_client_config.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config) | data source |
+| [google_project.this](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project) | data source |
+| [http_http.caller_ip_response](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_bastion_instance_size"></a> [bastion\_instance\_size](#input\_bastion\_instance\_size) | Instance size of bastion machine | `string` | `"e2-micro"` | no |
+| <a name="input_bastion_ssh_port"></a> [bastion\_ssh\_port](#input\_bastion\_ssh\_port) | Port for inbound SSH connections to bastion | `string` | `2222` | no |
+| <a name="input_elasticsearch_instance_size"></a> [elasticsearch\_instance\_size](#input\_elasticsearch\_instance\_size) | Instance size of ES machine | `string` | `"e2-standard-2"` | no |
+| <a name="input_gke_initial_nodes"></a> [gke\_initial\_nodes](#input\_gke\_initial\_nodes) | Initial number of nodes in GKE CLUSTER | `number` | `1` | no |
+| <a name="input_gke_instance_size"></a> [gke\_instance\_size](#input\_gke\_instance\_size) | Instance size of nodes in GKE CLUSTER | `string` | `"e2-medium"` | no |
+| <a name="input_gke_max_nodes"></a> [gke\_max\_nodes](#input\_gke\_max\_nodes) | Maximum number of nodes in GKE CLUSTER | `number` | `2` | no |
+| <a name="input_gke_min_nodes"></a> [gke\_min\_nodes](#input\_gke\_min\_nodes) | Minimum number of nodes in GKE CLUSTER | `number` | `1` | no |
+| <a name="input_kafka_memory_bytes"></a> [kafka\_memory\_bytes](#input\_kafka\_memory\_bytes) | Memory size in Kafka cluster | `number` | `3221225472` | no |
+| <a name="input_kafka_vpcu_count"></a> [kafka\_vpcu\_count](#input\_kafka\_vpcu\_count) | Number of vCPUs in Kafka cluster | `number` | `3` | no |
+| <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | Prefix for all resources | `string` | n/a | yes |
+| <a name="input_visit_manager_postgres_db_name"></a> [visit\_manager\_postgres\_db\_name](#input\_visit\_manager\_postgres\_db\_name) | Name of PostgreSQL DB for visit manager service | `string` | `"visit_manager"` | no |
+| <a name="input_visit_manager_postgres_instance_size"></a> [visit\_manager\_postgres\_instance\_size](#input\_visit\_manager\_postgres\_instance\_size) | Postgres instance size | `string` | `"db-custom-1-3840"` | no |
+| <a name="input_visit_manager_postgres_port"></a> [visit\_manager\_postgres\_port](#input\_visit\_manager\_postgres\_port) | Port for connections to DB for visit manager service | `string` | `"5432"` | no |
+| <a name="input_visit_manager_postgres_root_password"></a> [visit\_manager\_postgres\_root\_password](#input\_visit\_manager\_postgres\_root\_password) | Root user passoword for visit manager PostgreSQL. A random password will be generated if not provided. | `string` | `null` | no |
+| <a name="input_visit_manager_postgres_root_user"></a> [visit\_manager\_postgres\_root\_user](#input\_visit\_manager\_postgres\_root\_user) | Root username for visit manager PostgreSQL | `string` | `"root"` | no |
+| <a name="input_visit_manager_postgres_user"></a> [visit\_manager\_postgres\_user](#input\_visit\_manager\_postgres\_user) | User username for visit manager PostgreSQL | `string` | `"user"` | no |
+| <a name="input_visit_manager_postgres_user_password"></a> [visit\_manager\_postgres\_user\_password](#input\_visit\_manager\_postgres\_user\_password) | User passowrd for visit manager PostgreSQL. A random password will be generated if not provided. | `string` | `null` | no |
+| <a name="input_visit_manager_postgres_version"></a> [visit\_manager\_postgres\_version](#input\_visit\_manager\_postgres\_version) | Major version od PostgreSQL to be used in visit manager service | `string` | `"16"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_bastion_ip"></a> [bastion\_ip](#output\_bastion\_ip) | n/a |
+| <a name="output_bastion_ssh_port"></a> [bastion\_ssh\_port](#output\_bastion\_ssh\_port) | n/a |
+| <a name="output_elasticsearch_caceret_secret_id"></a> [elasticsearch\_caceret\_secret\_id](#output\_elasticsearch\_caceret\_secret\_id) | n/a |
+| <a name="output_elasticsearch_dns_name"></a> [elasticsearch\_dns\_name](#output\_elasticsearch\_dns\_name) | n/a |
+| <a name="output_elasticsearch_port"></a> [elasticsearch\_port](#output\_elasticsearch\_port) | n/a |
+| <a name="output_elasticsearch_private_ip"></a> [elasticsearch\_private\_ip](#output\_elasticsearch\_private\_ip) | n/a |
+| <a name="output_elasticsearch_proto"></a> [elasticsearch\_proto](#output\_elasticsearch\_proto) | n/a |
+| <a name="output_elasticsearch_root_password"></a> [elasticsearch\_root\_password](#output\_elasticsearch\_root\_password) | n/a |
+| <a name="output_elasticsearch_root_password_secret_id"></a> [elasticsearch\_root\_password\_secret\_id](#output\_elasticsearch\_root\_password\_secret\_id) | n/a |
+| <a name="output_elasticsearch_root_username"></a> [elasticsearch\_root\_username](#output\_elasticsearch\_root\_username) | n/a |
+| <a name="output_gke_cluster_dns_endpoint"></a> [gke\_cluster\_dns\_endpoint](#output\_gke\_cluster\_dns\_endpoint) | n/a |
+| <a name="output_gke_cluster_endpoint"></a> [gke\_cluster\_endpoint](#output\_gke\_cluster\_endpoint) | n/a |
+| <a name="output_gke_cluster_name"></a> [gke\_cluster\_name](#output\_gke\_cluster\_name) | n/a |
+| <a name="output_ingress_global_ip_address"></a> [ingress\_global\_ip\_address](#output\_ingress\_global\_ip\_address) | n/a |
+| <a name="output_ingress_global_ip_name"></a> [ingress\_global\_ip\_name](#output\_ingress\_global\_ip\_name) | n/a |
+| <a name="output_kafka_bootstrap_url"></a> [kafka\_bootstrap\_url](#output\_kafka\_bootstrap\_url) | according to https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart#use_the_kafka_command_line_tools |
+| <a name="output_kafka_cluster_id"></a> [kafka\_cluster\_id](#output\_kafka\_cluster\_id) | n/a |
+| <a name="output_postgres_db_name"></a> [postgres\_db\_name](#output\_postgres\_db\_name) | n/a |
+| <a name="output_postgres_dns_name"></a> [postgres\_dns\_name](#output\_postgres\_dns\_name) | Enterprise plus is required... seriously, Google? https://cloud.google.com/sql/docs/mysql/instance-info#view-write-endpoint |
+| <a name="output_postgres_ip"></a> [postgres\_ip](#output\_postgres\_ip) | n/a |
+| <a name="output_postgres_root_password"></a> [postgres\_root\_password](#output\_postgres\_root\_password) | n/a |
+| <a name="output_postgres_root_username"></a> [postgres\_root\_username](#output\_postgres\_root\_username) | n/a |
+| <a name="output_postgres_user_password"></a> [postgres\_user\_password](#output\_postgres\_user\_password) | n/a |
+| <a name="output_postgres_user_username"></a> [postgres\_user\_username](#output\_postgres\_user\_username) | n/a |
+| <a name="output_project"></a> [project](#output\_project) | n/a |
+| <a name="output_region"></a> [region](#output\_region) | n/a |
+| <a name="output_storage_k8s_manifests_bucket_url"></a> [storage\_k8s\_manifests\_bucket\_url](#output\_storage\_k8s\_manifests\_bucket\_url) | n/a |
+<!-- END_TF_DOCS -->

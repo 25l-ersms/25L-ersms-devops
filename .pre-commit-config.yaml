@@ -11,6 +11,8 @@ repos:
     - id: terraform_fmt
     - id: terraform_validate
     - id: terraform_docs
+      args:
+        - --args=--config=./terraform/.terraform.docs.yml
     - id: terraform_tflint
       args:
         - --args=--recursive
