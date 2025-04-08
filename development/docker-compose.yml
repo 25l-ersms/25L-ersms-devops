@@ -6,7 +6,7 @@ services:
       node.name: elasticsearch
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       discovery.type: single-node
-      ELASTIC_PASSWORD: abc
+      ELASTIC_PASSWORD: ${ES_PASS}
     ports:
       - 9200:9200
       - 9300:9300
@@ -14,13 +14,40 @@ services:
       - es_data:/usr/share/elasticsearch/data
     restart: unless-stopped
   visit_sched:
-    image: visit_sched
     container_name: visit_sched
-    build: C\CHANG\ME  #  abs path to visit_sched repo
+    build:
+      context: ${VISIT_SCHED_PATH}  # change .env to path to visit_sched repo
+      target: dev
+    image: visit-scheduler:dev
     ports:
       - 8080:8080
     depends_on:
       - elasticsearch
+    env_file: .env
+    volumes:
+      - ${VISIT_SCHED_PATH}//visit_scheduler:/app/visit_scheduler
+  firestore_emulator:
+    image: mtlynch/firestore-emulator
+    environment:
+      - FIRESTORE_PROJECT_ID=${FIRESTORE_PROJECT_ID}
+      - PORT=${FIRESTORE_EMULATOR_PORT}
+    ports:
+      - ${FIRESTORE_EMULATOR_PORT}:${FIRESTORE_EMULATOR_PORT}
+  user_chat:
+    container_name: user_chat
+    build:
+      context: ${USER_CHAT_PATH}  # change .env to path to visit_sched repo
+      target: dev
+    image: user-chat:dev
+    ports:
+      - 8081:8081
+    depends_on:
+      - firestore_emulator
+    environment:
+      - FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST}:${FIRESTORE_EMULATOR_PORT}
+    volumes:
+      - ${USER_CHAT_PATH}//user_chat:/app/user_chat
+
 
 volumes:
   es_data:
