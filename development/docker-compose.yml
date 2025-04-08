@@ -33,7 +33,7 @@ services:
       - PORT=${FIRESTORE_EMULATOR_PORT}
     ports:
       - ${FIRESTORE_EMULATOR_PORT}:${FIRESTORE_EMULATOR_PORT}
-  app:
+  user_chat:
     container_name: user_chat
     build:
       context: ${USER_CHAT_PATH}  # change .env to path to visit_sched repo
