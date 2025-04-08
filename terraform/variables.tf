@@ -15,6 +15,7 @@ variable "bastion_ssh_port" {
 
 variable "bastion_instance_size" {
   description = "Instance size of bastion machine"
+  type        = string
   default     = "e2-micro"
 }
 
@@ -24,6 +25,7 @@ variable "bastion_instance_size" {
 
 variable "visit_manager_postgres_instance_size" {
   description = "Postgres instance size"
+  type        = string
   default     = "db-custom-1-3840"
 }
 
@@ -75,22 +77,26 @@ variable "visit_manager_postgres_user_password" {
 
 variable "gke_min_nodes" {
   description = "Minimum number of nodes in GKE CLUSTER"
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "gke_initial_nodes" {
   description = "Initial number of nodes in GKE CLUSTER"
-  default = 1
+  type        = number
+  default     = 1
 }
 
 variable "gke_max_nodes" {
   description = "Maximum number of nodes in GKE CLUSTER"
-  default = 2
+  type        = number
+  default     = 2
 }
 
 variable "gke_instance_size" {
   description = "Instance size of nodes in GKE CLUSTER"
-  default = "e2-medium"
+  type        = string
+  default     = "e2-medium"
 }
 
 #################
@@ -99,6 +105,7 @@ variable "gke_instance_size" {
 
 variable "elasticsearch_instance_size" {
   description = "Instance size of ES machine"
+  type        = string
   # 2 vCPUs, 8 GB memory
   default = "e2-standard-2"
 }
@@ -109,12 +116,14 @@ variable "elasticsearch_instance_size" {
 
 variable "kafka_vpcu_count" {
   description = "Number of vCPUs in Kafka cluster"
+  type        = number
   # min value
   default = 3
 }
 
 variable "kafka_memory_bytes" {
   description = "Memory size in Kafka cluster"
+  type        = number
   # min value
   default = 3221225472
 }

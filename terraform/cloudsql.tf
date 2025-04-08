@@ -24,7 +24,7 @@ module "pg" {
 
 
   ip_configuration = {
-    ipv4_enabled        = false
+    ipv4_enabled = false
     # can also be ENCRYPTED_ONLY
     ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     private_network     = module.vpc.network_self_link
