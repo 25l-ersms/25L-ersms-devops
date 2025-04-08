@@ -26,4 +26,3 @@ docker compose --env-file .env up --build
 chmod +x setup.sh
 ./setup.sh
 ```
-

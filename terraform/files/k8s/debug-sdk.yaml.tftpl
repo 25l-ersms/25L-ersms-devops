@@ -1,0 +1,24 @@
+# Workload identity federation example
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: ${gcp_service_account}
+  name: debug-sdk-sa
+  namespace: default
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-sdk
+  namespace: default
+spec:
+  serviceAccountName: debug-sdk-sa
+  nodeSelector:
+    iam.gke.io/gke-metadata-server-enabled: "true"
+  containers:
+  - name: debug-sdk
+    image: google/cloud-sdk:slim
+    command: ["sleep","infinity"]
