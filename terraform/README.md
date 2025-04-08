@@ -1,6 +1,6 @@
 # ERSMS terraform
 
-![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)           
+![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 
 ### Prerequisites
 
@@ -130,7 +130,7 @@ terraform output postgres_root_password
 terraform output postgres_db_name
 ```
 
-Connect to Cloud SQL running Postgres: 
+Connect to Cloud SQL running Postgres:
 
 ```shell
 # FROM BASTION HOST
@@ -148,7 +148,7 @@ SELECT datname FROM pg_database;
 
 ##### ElasticSearch
 
-Get ElasticSearch DNS name, proto, port, cert secret id, root user username and password secret id: 
+Get ElasticSearch DNS name, proto, port, cert secret id, root user username and password secret id:
 
 ```shell
 terraform output elasticsearch_dns_name
@@ -186,7 +186,7 @@ gcloud secrets versions access latest --secret=<ES_CERT_SECRET_ID> --out-file=/t
 curl --cacert /tmp/es_ca.crt -u "<ES_USERNAME>:$(gcloud secrets versions access latest --secret=<ES_PASSWORD_SECRET_ID>)" <ES_PROTO>://<ES_DNS_NAME>:<ES_PORT>
 ```
 
-### Troubleshooting 
+### Troubleshooting
 
 #### Resource already being used when executing `terraform destroy`
 
@@ -200,7 +200,7 @@ Example error message:
 
 #### API has not been used in project before or it is disabled
 
-Example error message: 
+Example error message:
 
 > Error: Error creating service account: googleapi: Error 403: <...> API has not been used in project [PROJECT-NUMBER] before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/iam.googleapis.com/overview?project=[PROJECT-NUMBER] then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry., accessNotConfigured
 
