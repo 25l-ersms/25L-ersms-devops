@@ -2,38 +2,48 @@
 
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 
-### Prerequisites
+## Prerequisites
 
 - Google Cloud project with billing enabled ([guide](https://developers.google.com/workspace/guides/create-project))
 - `gcloud` CLI authenticated and pointing to the desired project.
   - `gcloud config set project <PROJECT_ID>`
   - `gcloud auth application-default login`
 - [`terraform`](https://developer.hashicorp.com/terraform/install?product_intent=terraform) version `>=1.10.0`
+- For development:
+  - [`pre-commit`](https://pre-commit.com/)
+  - [`tflint`](https://github.com/terraform-linters/tflint)
+  - [`terraform-docs`](https://terraform-docs.io/)
 
-### Setup
+## Setup
 
 ```shell
 chmod +x setup.sh
 ./setup.sh
 ```
 
-### Create infrastructure
+If you plan to make any changes, install pre-commit hooks:
+
+```shell
+pre-commit install
+```
+
+## Create infrastructure
 
 ```shell
 terraform apply
 ```
 
-### Test the setup
+## Test the setup
 
 // TODO automate this
 
-##### Connect to bastion host
+#### Connect to bastion host
 
 ```shell
 gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PREFIX>-bastion" --project "<PROJECT_ID>" -- -p 2222
 ```
 
-##### GKE cluster
+#### GKE cluster
 
 Get GKE cluster name: `terraform output gke_cluster_name`
 
@@ -64,7 +74,7 @@ gcloud storage cp --recursive <MANIFESTS_BUCKET_NAME> .
 kubectl apply -f <MANIFESTS_BUCKET_NAME>/
 ```
 
-##### Use the debug pod
+#### Use the debug pod
 
 You can use the `debug-sdk` pod to test access to resources which require specific IAM roles:
 
@@ -75,7 +85,7 @@ kubectl exec -it debug-sdk -- bash
 
 You should be able to complete all of the following checks from both the bastion host and the debug pod.
 
-##### Kafka
+#### Kafka
 
 Based on [quickstart guide](https://cloud.google.com/managed-service-for-apache-kafka/docs/quickstart).
 
@@ -120,7 +130,7 @@ kafka-topics.sh --list \
 --command-config client.properties
 ```
 
-##### PostgreSQL
+#### PostgreSQL
 
 Get postgres IP, password and DB name:
 
@@ -146,7 +156,7 @@ From `psql` shell:
 SELECT datname FROM pg_database;
 ```
 
-##### ElasticSearch
+#### ElasticSearch
 
 Get ElasticSearch DNS name, proto, port, cert secret id, root user username and password secret id:
 
@@ -186,9 +196,9 @@ gcloud secrets versions access latest --secret=<ES_CERT_SECRET_ID> --out-file=/t
 curl --cacert /tmp/es_ca.crt -u "<ES_USERNAME>:$(gcloud secrets versions access latest --secret=<ES_PASSWORD_SECRET_ID>)" <ES_PROTO>://<ES_DNS_NAME>:<ES_PORT>
 ```
 
-### Troubleshooting
+## Troubleshooting
 
-#### Resource already being used when executing `terraform destroy`
+### Resource already being used when executing `terraform destroy`
 
 Example error message:
 
@@ -198,7 +208,7 @@ Example error message:
 - Go to https://console.cloud.google.com/net-security/firewall-manager/firewall-policies/list and delete all firewall rules **which do not start with _default_**
 - Go to https://console.cloud.google.com/compute/networkendpointgroups/list and delete all network endpoint groups
 
-#### API has not been used in project before or it is disabled
+### API has not been used in project before or it is disabled
 
 Example error message:
 
@@ -207,11 +217,11 @@ Example error message:
 - If you have not ran `setup.sh` yet, now it's time to do it (the script is idempotent, you can re-run it anytime)
 - Otherwise, just wait a few minutes :/ some APIs need a few minutes to *actually* become accessible despite showing up as enabled
 
-#### Timeout when SSH-ing to bastion
+### Timeout when SSH-ing to bastion
 
 Terraform creates a ~~security group~~ firewall rule which allows inbound TCP on port 2222 (default) **only from your current IP**. The IP is checked when applying the config. If you expect it could change, simply rerun `terraform apply`.
 
-#### Google could not find default credentials
+### Google could not find default credentials
 
 Example error message:
 
