@@ -30,4 +30,4 @@
 - [ ] Outputs!!!
 - [ ] Healthchecks before completing the deployment
 - [ ] Output descriptions
-- [ ] Automated cleanup :trollge: 
+- [ ] Automated cleanup :trollge:
