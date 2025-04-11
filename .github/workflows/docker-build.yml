@@ -2,6 +2,10 @@ name: Publish Docker image
 
 on:
   workflow_call:
+    inputs:
+      img_name:
+        required: true
+        type: string
 
 jobs:
   push_to_registry:
@@ -26,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ vars.DOCKER_NAMESPACE }}/ersms-visit_sched
+          images: ${{ vars.DOCKER_NAMESPACE }}/${{ inputs.img_name }}
 
       - name: Build and push Docker image
         id: push
