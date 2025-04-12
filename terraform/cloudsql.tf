@@ -24,9 +24,9 @@ module "pg" {
 
 
   ip_configuration = {
-    ipv4_enabled        = false
+    ipv4_enabled = false
     # can also be ENCRYPTED_ONLY
-    ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED" 
+    ssl_mode            = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     private_network     = module.vpc.network_self_link
     allocated_ip_range  = google_compute_global_address.private_ip_alloc.name
     authorized_networks = []
@@ -59,4 +59,3 @@ module "pg" {
 
   depends_on = [google_service_networking_connection.default]
 }
-
