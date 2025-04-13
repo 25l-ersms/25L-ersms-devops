@@ -16,16 +16,16 @@ change values inside .env (eg. paths)
 
 run containers:
 ```
-docker compose --env-file .env up --build
+docker compose --env-file .env up --build --detach && docker compose logs --follow
 ```
 
-### usefull commands:
+### useful  commands:
 log onto postgres:
 ```
 psql -d visit_manager -U postgres
 ```
 
-## Prod (sortof, like local prod? maybe staging?)
+## Prod (sortof, like personal prod? maybe staging?)
 ### Prerequisites
 
 `gcloud` CLI authenticated and pointing to the desired project.
