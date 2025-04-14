@@ -36,4 +36,3 @@ psql -d visit_manager -U postgres
 chmod +x setup.sh
 ./setup.sh
 ```
-
