@@ -33,6 +33,30 @@ resource "google_project_iam_binding" "kafka_service_account_iam_binding" {
   ]
 }
 
+resource "google_project_iam_binding" "firestore_service_account_iam_binding_gke" {
+  for_each = toset([
+    "roles/datastore.user"
+  ])
+  project = local.gcp_project_id
+  role    = each.value
+
+  members = [
+    google_service_account.gke_pod_identity.member
+  ]
+}
+
+resource "google_project_iam_binding" "firestore_service_account_iam_binding_bastion" {
+  for_each = toset([
+    "roles/datastore.owner"
+  ])
+  project = local.gcp_project_id
+  role    = each.value
+
+  members = [
+    google_service_account.bastion_service_account.member,
+  ]
+}
+
 resource "google_service_account" "elasticsearch_service_account" {
   account_id   = "${local.prfx}elasticsearch"
   display_name = "ElasticSearch"

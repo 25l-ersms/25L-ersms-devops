@@ -196,6 +196,14 @@ gcloud secrets versions access latest --secret=<ES_CERT_SECRET_ID> --out-file=/t
 curl --cacert /tmp/es_ca.crt -u "<ES_USERNAME>:$(gcloud secrets versions access latest --secret=<ES_PASSWORD_SECRET_ID>)" <ES_PROTO>://<ES_DNS_NAME>:<ES_PORT>
 ```
 
+#### Firestore
+
+From bastion host / debug pod:
+
+```shell
+gcloud firestore databases list
+```
+
 ## Troubleshooting
 
 ### Resource already being used when executing `terraform destroy`
@@ -278,9 +286,12 @@ Terraform's Google provider is configured to use default `gcloud` credentials. I
 | [google_compute_router.group1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router) | resource |
 | [google_dns_managed_zone.internal-zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) | resource |
 | [google_dns_record_set.elsasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) | resource |
+| [google_firestore_database.database](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_database) | resource |
 | [google_managed_kafka_cluster.kafka](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/managed_kafka_cluster) | resource |
 | [google_managed_kafka_topic.dummy](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/managed_kafka_topic) | resource |
 | [google_project_iam_binding.bastion_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.firestore_service_account_iam_binding_bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.firestore_service_account_iam_binding_gke](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.gke_iam_workflow_identity_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.gke_ingress_controller_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.kafka_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
@@ -351,6 +362,7 @@ Terraform's Google provider is configured to use default `gcloud` credentials. I
 | <a name="output_elasticsearch_root_password"></a> [elasticsearch\_root\_password](#output\_elasticsearch\_root\_password) | n/a |
 | <a name="output_elasticsearch_root_password_secret_id"></a> [elasticsearch\_root\_password\_secret\_id](#output\_elasticsearch\_root\_password\_secret\_id) | n/a |
 | <a name="output_elasticsearch_root_username"></a> [elasticsearch\_root\_username](#output\_elasticsearch\_root\_username) | n/a |
+| <a name="output_firestore_db_name"></a> [firestore\_db\_name](#output\_firestore\_db\_name) | n/a |
 | <a name="output_gke_cluster_dns_endpoint"></a> [gke\_cluster\_dns\_endpoint](#output\_gke\_cluster\_dns\_endpoint) | n/a |
 | <a name="output_gke_cluster_endpoint"></a> [gke\_cluster\_endpoint](#output\_gke\_cluster\_endpoint) | n/a |
 | <a name="output_gke_cluster_name"></a> [gke\_cluster\_name](#output\_gke\_cluster\_name) | n/a |

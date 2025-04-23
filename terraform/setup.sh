@@ -59,7 +59,8 @@ heading "Enabling APIs..."
         cloudresourcemanager.googleapis.com \
         dns.googleapis.com \
         iamcredentials.googleapis.com \
-        secretmanager.googleapis.com
+        secretmanager.googleapis.com \
+        firestore.googleapis.com
 )
 
 heading "Initializing terraform..."
