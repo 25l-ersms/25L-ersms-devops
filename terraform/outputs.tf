@@ -134,3 +134,11 @@ output "elasticsearch_caceret_secret_id" {
 output "storage_k8s_manifests_bucket_url" {
   value = google_storage_bucket.k8s_manifests.url
 }
+
+#############
+# Firestore #
+#############
+
+output "firestore_db_name" {
+  value = google_firestore_database.database.name
+}
