@@ -109,7 +109,23 @@ services:
       interval: 5s
       timeout: 3s
       retries: 60
-  
+  pgadmin:
+    image: dpage/pgadmin4:9
+    container_name: pgadmin4
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: toor
+      # 30 = warn
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 30
+      # prevent gunicorn from spamming the logs
+      # https://github.com/docker/compose/issues/8578#issuecomment-945228061
+      GUNICORN_ACCESS_LOGFILE: '/dev/null'
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+
 volumes:
   es_data:
     driver: local
