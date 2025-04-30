@@ -10,7 +10,7 @@ cd development
 copy env file and example configs:
 ```
 cp .env.sample .env
-development/docker.sample development/docker
+cp development/docker.sample development/docker
 ```
 
 change values inside .env (eg. paths)
