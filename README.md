@@ -26,6 +26,10 @@ log onto postgres:
 psql -d visit_manager -U postgres
 ```
 
+### Accessing PgAdmin4
+
+PgAdmin4 is running on port 8888 with a pre-configured server, login using credentials from docker compose file, find PG password in envfile.
+
 ## Prod (sortof, like personal prod? maybe staging?)
 ### Prerequisites
 
