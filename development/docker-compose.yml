@@ -13,6 +13,8 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
     restart: unless-stopped
+
+
   visit_sched:
     container_name: visit_sched
     build:
@@ -22,11 +24,17 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - elasticsearch
-      - broker
+      elasticsearch:
+        condition: service_started
+      broker:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
     env_file: .env
     volumes:
       - ${VISIT_SCHED_PATH}//visit_scheduler:/app/visit_scheduler
+
+
   firestore_emulator:
     image: mtlynch/firestore-emulator
     environment:
@@ -34,6 +42,8 @@ services:
       - PORT=${FIRESTORE_EMULATOR_PORT}
     ports:
       - ${FIRESTORE_EMULATOR_PORT}:${FIRESTORE_EMULATOR_PORT}
+
+
   user_chat:
     container_name: user_chat
     build:
@@ -49,6 +59,8 @@ services:
       - FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST}:${FIRESTORE_EMULATOR_PORT}
     volumes:
       - ${USER_CHAT_PATH}//user_chat:/app/user_chat
+
+
   postgres:
     image: postgres:16
     container_name: postgres
@@ -61,6 +73,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+
+
   visit_manager:
     container_name: visit_manager
     build:
@@ -70,21 +84,32 @@ services:
     ports:
       - 8082:8082
     depends_on:
-      - postgres
-      - broker
+      postgres:
+        condition: service_started
+      broker:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=${POSTGRES_PORT}
+      - KAFKA_BOOTSTRAP_URL=${KAFKA_BOOTSTRAP_URL}
+      - KAFKA_TOPIC=${KAFKA_TOPIC}
+      - KAFKA_AUTHENTICATION_SCHEME=${KAFKA_AUTHENTICATION_SCHEME}
     volumes:
       - ${VISIT_MANAGER_PATH}//visit_manager:/app/visit_manager
+
+
   frontend:
     container_name: frontend
     build:
       context: ${FRONTEND_PATH}  # change .env to path to visit_sched repo
     ports:
       - 3000:3000
+
+
   broker:
     image: apache/kafka:4.0.0
     container_name: broker
@@ -109,6 +134,30 @@ services:
       interval: 5s
       timeout: 3s
       retries: 60
+
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    depends_on:
+      - broker
+    container_name: init-kafka
+    restart: "no"
+    environment:
+      KAFKA_BOOTSTRAP_URL: ${KAFKA_BOOTSTRAP_URL}
+      KAFKA_TOPIC: ${KAFKA_TOPIC}
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --create --if-not-exists --topic "$KAFKA_TOPIC" --replication-factor 1 --partitions 1
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --list
+      "
+
+
   pgadmin:
     image: dpage/pgadmin4:9
     container_name: pgadmin4

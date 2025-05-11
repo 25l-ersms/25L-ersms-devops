@@ -130,6 +130,22 @@ kafka-topics.sh --list \
 --command-config client.properties
 ```
 
+To test sending messages, open a `tmux` session and execute commands in two separate shells:
+
+Listen to a topic:
+
+```shell
+kafka-console-consumer.sh --bootstrap-server $BOOTSTRAP --topic test_topic --consumer.config client.properties
+```
+
+Publish messages in a topic:
+
+```shell
+kafka-console-producer.sh --bootstrap-server $BOOTSTRAP --topic test_topic --producer.config client.properties --property parse.key=true --property key.separator=:
+```
+
+Send a "hello" message with a "test" key: enter "test:hello" in the producer session. The message should appear in the consumer window.
+
 #### PostgreSQL
 
 Get postgres IP, password and DB name:
@@ -237,14 +253,29 @@ Example error message:
 
 Terraform's Google provider is configured to use default `gcloud` credentials. If you have not configured them, run `gcloud auth application-default login`.
 
+### Service does not have permission to retrieve subnet
+
+Example error message:
+
+> Error creating Cluster: googleapi: Error 400: Invalid resource state for "projects/<PROJECT_ID>/regions/<REGION>/subnetworks/<SUBNET>": Service does not have permission to retrieve subnet. Please grant <SERVICE_ID(?)>@gcp-sa-managedkafka.iam.gserviceaccount.com the managedkafka.serviceAgent role in the IAM policy of the project <PROJECT_ID> and ensure the Compute Engine API is enabled in project <PROJECT_ID>
+
+Honestly, I have no idea what causes this issue. It appeared in my environment randomly when I was messing with Managed Kafka. Doing what the message says seems do resolve the issue:
+
+```shell
+gcloud projects add-iam-policy-binding <PROJECT_ID> \
+   --member="serviceAccount:<SERVICE_ID(?)>@gcp-sa-managedkafka.iam.gserviceaccount.com" \
+   --role="roles/managedkafka.serviceAgent"
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.10 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
 | <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | ~> 2.3 |
 | <a name="requirement_google"></a> [google](#requirement\_google) | ~> 6.8 |
+| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | ~> 6.27 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.4 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.7 |
 

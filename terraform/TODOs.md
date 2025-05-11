@@ -9,7 +9,7 @@
 
 ### Compute - general
 
-- [ ] Configurable instance size
+- [x] Configurable instance size
 - [ ] Run startup scripts using cloud-init
 
 ### ElasticSearch
@@ -27,7 +27,7 @@
 
 ### Terraform
 
-- [ ] Outputs!!!
+- [x] Outputs!!!
 - [ ] Healthchecks before completing the deployment
 - [ ] Output descriptions
 - [ ] Automated cleanup :trollge:

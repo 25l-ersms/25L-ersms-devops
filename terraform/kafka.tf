@@ -20,7 +20,7 @@ resource "google_managed_kafka_cluster" "kafka" {
 }
 
 resource "google_managed_kafka_topic" "dummy" {
-  topic_id           = "${local.prfx}dummy-topic"
+  topic_id           = "test_topic"
   cluster            = google_managed_kafka_cluster.kafka.cluster_id
   location           = local.gcp_region
   partition_count    = 2

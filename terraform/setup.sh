@@ -60,7 +60,8 @@ heading "Enabling APIs..."
         dns.googleapis.com \
         iamcredentials.googleapis.com \
         secretmanager.googleapis.com \
-        firestore.googleapis.com
+        firestore.googleapis.com \
+        vpcaccess.googleapis.com
 )
 
 heading "Initializing terraform..."
