@@ -24,9 +24,12 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - elasticsearch
-      - broker
-      - init-kafka
+      elasticsearch:
+        condition: service_started
+      broker:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
     env_file: .env
     volumes:
       - ${VISIT_SCHED_PATH}//visit_scheduler:/app/visit_scheduler
@@ -81,9 +84,12 @@ services:
     ports:
       - 8082:8082
     depends_on:
-      - postgres
-      - broker
-      - init-kafka
+      postgres:
+        condition: service_started
+      broker:
+        condition: service_started
+      init-kafka:
+        condition: service_completed_successfully
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_USER=${POSTGRES_USER}
