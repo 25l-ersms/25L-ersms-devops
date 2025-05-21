@@ -98,6 +98,7 @@ services:
       - KAFKA_BOOTSTRAP_URL=${KAFKA_BOOTSTRAP_URL}
       - KAFKA_TOPIC=${KAFKA_TOPIC}
       - KAFKA_AUTHENTICATION_SCHEME=${KAFKA_AUTHENTICATION_SCHEME}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
     volumes:
       - ${VISIT_MANAGER_PATH}//visit_manager:/app/visit_manager
 

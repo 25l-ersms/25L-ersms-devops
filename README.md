@@ -41,3 +41,10 @@ PgAdmin4 is running on port 8888 with a pre-configured server, login using crede
 chmod +x setup.sh
 ./setup.sh
 ```
+
+### Stripe API Key
+
+To obtain the Stripe API key, follow these steps:
+1. Log in / Create a Stripe account [Stripe dashboard](https://dashboard.stripe.com/).
+2. Go to the [Test home page](https://dashboard.stripe.com/test/dashboard)
+3. Copy `Secret key` and paste it in the `.env` file as `STRIPE_API_KEY`.
