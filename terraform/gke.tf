@@ -4,7 +4,7 @@ module "gke" {
   project_id         = local.gcp_project_id
   name               = "${local.prfx}gke"
   region             = local.gcp_region
-  kubernetes_version = "1.32.2"
+  kubernetes_version = "1.32"
 
   # networking
   # regional=false implies a zonal cluster

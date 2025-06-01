@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visit-man
+  namespace: visit-man-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: visit-man
+  template:
+    metadata:
+      labels:
+        app: visit-man
+    spec:
+      containers:
+        - name: visit-man
+          image: gambolkf/ersms-visit_manager:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082

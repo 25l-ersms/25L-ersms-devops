@@ -87,14 +87,46 @@ resource "google_service_account" "gke_pod_identity" {
   display_name = "GKE pod (example)"
 }
 
-resource "google_project_iam_binding" "gke_iam_workflow_identity_iam_binding" {
+# resource "google_project_iam_binding" "gke_iam_workflow_identity_iam_binding" {
+#   for_each = toset([
+#     "roles/iam.workloadIdentityUser"
+#   ])
+#   project = local.gcp_project_id
+#   role    = each.value
+
+#   members = [
+#     "serviceAccount:${local.gcp_project_id}.svc.id.goog[default/debug-sdk-sa]"
+#   ]
+# }
+
+resource "google_service_account" "gke_pod_identity_external_secrets" {
+  account_id   = "${local.prfx}eso"
+  display_name = "Service Account for External Secrets Operator on GKE"
+}
+
+
+resource "google_project_iam_binding" "gke_pod_identity_external_secrets_iam_binding" {
   for_each = toset([
-    "roles/iam.workloadIdentityUser"
+    "roles/iam.workloadIdentityUser",
   ])
   project = local.gcp_project_id
   role    = each.value
 
   members = [
-    "serviceAccount:${local.gcp_project_id}.svc.id.goog[default/debug-sdk-sa]"
+    # google_service_account.gke_pod_identity_external_secrets.member
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-sched-ns/external-secrets]"
+  ]
+}
+
+resource "google_project_iam_binding" "gke_pod_identity_external_secrets_iam_binding1" {
+  for_each = toset([
+    "roles/secretmanager.secretAccessor",
+    "roles/iam.serviceAccountTokenCreator"
+  ])
+  project = local.gcp_project_id
+  role    = each.value
+
+  members = [
+    google_service_account.gke_pod_identity_external_secrets.member
   ]
 }

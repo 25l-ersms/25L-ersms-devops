@@ -19,3 +19,19 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          env:
+            - name: ES_CACERT
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-cacert
+                  key: ersms-test-elasticsearch-cacert
+            - name: ES_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-root-user
+                  key: ersms-test-elasticsearch-root-user
+            - name: ES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-root-password
+                  key: ersms-test-elasticsearch-root-password
