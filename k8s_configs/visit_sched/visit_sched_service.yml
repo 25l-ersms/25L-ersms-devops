@@ -3,9 +3,13 @@ kind: Service
 metadata:
   name: visit-sched-service
   namespace: visit-sched-ns
+# annotations:
+#   cloud.google.com/neg: '{"ingress": true}'
 spec:
   ports:
     - port: 80
       targetPort: 8080
+      protocol: TCP
   selector:
     app: visit-sched
+  type: NodePort

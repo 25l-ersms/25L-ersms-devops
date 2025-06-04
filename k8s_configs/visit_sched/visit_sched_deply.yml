@@ -19,6 +19,9 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          envFrom:
+          - configMapRef:
+              name: visit-sched
           env:
             - name: ES_CACERT
               valueFrom:
@@ -35,3 +38,13 @@ spec:
                 secretKeyRef:
                   name: elasticsearch-root-password
                   key: ersms-test-elasticsearch-root-password
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /docs
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10

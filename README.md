@@ -57,7 +57,7 @@ Open a SOCKS5 proxy on bastion:
 
 ```shell
 # keep this shell open or add -f flag to run in background
-gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PROFIX>-bastion" --project "<PROJECT>" -- -p 2222 -q -D 1337 -N
+gcloud compute ssh --zone "<REGION>-a" "<RESOURCE_PROFIX>-bastion" --project "<PROJECT>" -- -p 2222 -q -D 1337 -N -v
 ```
 
 Install GKE auth plugin and authenticate:
@@ -67,6 +67,7 @@ Install GKE auth plugin and authenticate:
 sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
 
 # authenticate against GKE
+# note: you will need to re-run this if you recreate the cluster, even if all names match
 gcloud container clusters get-credentials <RESOURCE_PREFIX>-gke --region==<REGION>-a --project=<PROJECT>
 ```
 
@@ -97,13 +98,13 @@ kubectl annotate serviceaccount external-secrets \
   iam.gke.io/gcp-service-account=<RESOURCE_PREFIX>-eso@<PROJECT_ID>.iam.gserviceaccount.com
 
 # create an SA in a service namespace (example: visit scheduler)
-kubectl apply -f k8s_configs/visit_sched/external_secrets_sa.yml
+kubectl apply -f k8s_configs/visit_sched/visit_sched_external_secrets_sa.yml
 
 # create a namespace-scoped secret store
 kubectl apply -f k8s_configs/visit_sched/visit_sched_secret_store.yml
 
 # create secrets from secret manager
-kubectl apply -f k8s_configs/visit_sched/visit_secrets.yml
+kubectl apply -f k8s_configs/visit_sched/visit_sched_secrets.yml
 
 # check whether external-secrets has successfully created secrets
 kubectl get secrets -n visit-sched-ns
