@@ -113,6 +113,7 @@ services:
     container_name: frontend
     build:
       context: ${FRONTEND_PATH}  # change .env to path to visit_sched repo
+    env_file: .env
     ports:
       - 3000:3000
 
@@ -169,7 +170,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:9
-    container_name: pgadmin4
+    container_name: pgadmin42
     restart: unless-stopped
     ports:
       - "8888:80"
