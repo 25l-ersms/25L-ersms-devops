@@ -18,7 +18,7 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-sched
-          image: gambolkf/ersms-visit_sched@sha256:d07b97608b3e6a504dd522652c6cc3341fd1c07d33e984f06b8911d96424893d
+          image: gambolkf/ersms-visit_sched@sha256:a3daec766ffa692de4a3d8910d7bb9e639c597ec5a6e89599cbdb2d4632a4eaf
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -26,11 +26,6 @@ spec:
           - configMapRef:
               name: visit-sched
           env:
-            - name: ES_CACERT
-              valueFrom:
-                secretKeyRef:
-                  name: elasticsearch-cacert
-                  key: ersms-elasticsearch-cacert
             - name: ES_LOGIN
               valueFrom:
                 secretKeyRef:
@@ -41,6 +36,8 @@ spec:
                 secretKeyRef:
                   name: elasticsearch-root-password
                   key: ersms-elasticsearch-root-password
+            - name: ES_CACERT_PATH
+              value: "/var/gcpsm/es_cacart.pem"
           readinessProbe:
             failureThreshold: 5
             httpGet:
@@ -51,3 +48,14 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: "/var/gcpsm"
+              name: elasticsearch-cacert
+              readOnly: true
+      volumes:
+        - name: elasticsearch-cacert
+          secret:
+            secretName: elasticsearch-cacert
+            items:
+            - key: ersms-elasticsearch-cacert
+              path: es_cacart.pem
