@@ -3,9 +3,13 @@ kind: Service
 metadata:
   name: visit-man-service
   namespace: visit-man-ns
+# annotations:
+#   cloud.google.com/neg: '{"ingress": true}'
 spec:
   ports:
     - port: 80
       targetPort: 8082
+      protocol: TCP
   selector:
     app: visit-man
+  type: NodePort

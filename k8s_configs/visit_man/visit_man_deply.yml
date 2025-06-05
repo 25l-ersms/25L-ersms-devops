@@ -13,9 +13,38 @@ spec:
       labels:
         app: visit-man
     spec:
+      serviceAccountName: visit-man
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-man
-          image: gambolkf/ersms-visit_manager:main
+          image: gambolkf/ersms-visit_man@main
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
+          envFrom:
+          - configMapRef:
+              name: visit-man
+          env:
+            - name: POSTGRES_USER
+              value: root
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: ersms-postgres-root-password
+            - name: STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-api-key
+                  key: ersms-stripe-api-key
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/visit-man/docs
+              port: 8082
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
