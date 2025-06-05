@@ -145,5 +145,7 @@ resource "google_project_iam_binding" "gke_pod_identity_user_chat_iam_binding" {
     "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-man-ns/visit-man]",
     "serviceAccount:${local.gcp_project_id}.svc.id.goog[user-chat-ns/user-chat]",
     "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-sched-ns/external-secrets]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-man-ns/external-secrets]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[user-chat-ns/external-secrets]",
   ]
 }

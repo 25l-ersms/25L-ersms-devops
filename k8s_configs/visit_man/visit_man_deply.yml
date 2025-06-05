@@ -18,7 +18,7 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-man
-          image: gambolkf/ersms-visit_man@main
+          image: gambolkf/ersms-visit_manager:main
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -38,6 +38,19 @@ spec:
                 secretKeyRef:
                   name: stripe-api-key
                   key: ersms-stripe-api-key
+            # TODO move the following to secrets
+            - name: GOOGLE_CLIENT_ID
+              value: NOTSET
+            - name: GOOGLE_CLIENT_SECRET
+              value: NOTSET
+            - name: SECRET_KEY
+              value: secret123
+            - name: REDIRECT_URL
+              value: http://localhost:8082/auth
+            - name: JWT_SECRET_KEY
+              value: secret123
+            - name: FRONTEND_URL
+              value: http://localhost:8082/docs
           readinessProbe:
             failureThreshold: 5
             httpGet:
