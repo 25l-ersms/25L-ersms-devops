@@ -9,12 +9,12 @@ metadata:
     kubernetes.io/ingress.class: "gce"
     cloud.google.com/load-balancer-type: "External"
     kubernetes.io/ingress.allow-http: "true"
-    kubernetes.io/ingress.global-static-ip-name: "ersms-test-ingress-external-alb-ipv4"
+    kubernetes.io/ingress.global-static-ip-name: "ersms-ingress-external-alb-ipv4"
 spec:
   rules:
   - http:
       paths:
-      - path: /*
+      - path: /api/visit-sched/*
         pathType: ImplementationSpecific
         backend:
           service:

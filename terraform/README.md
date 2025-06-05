@@ -52,7 +52,7 @@ Fetch GKE credentials:
 ```shell
 # FROM BASTION HOST
 
-gcloud container clusters get-credentials ersms-test-gke --region=<REGION>-a --project=<PROJECT_ID>
+gcloud container clusters get-credentials ersms-gke --region=<REGION>-a --project=<PROJECT_ID>
 ```
 
 Interact with the cluster using `kubectl`:
@@ -324,8 +324,8 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | [google_project_iam_binding.firestore_service_account_iam_binding_bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.firestore_service_account_iam_binding_gke](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.gke_ingress_controller_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
-| [google_project_iam_binding.gke_pod_identity_external_secrets_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.gke_pod_identity_external_secrets_iam_binding1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.gke_pod_identity_user_chat_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.kafka_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_secret_manager_secret.elasticsearch_cacert](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.elasticsearch_root_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
@@ -356,6 +356,9 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | [google_service_account.elasticsearch_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.gke_pod_identity](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.gke_pod_identity_external_secrets](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_user_chat](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_visit_man](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_visit_sched](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.gke_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_networking_connection.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_networking_connection) | resource |
 | [google_storage_bucket.k8s_manifests](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
