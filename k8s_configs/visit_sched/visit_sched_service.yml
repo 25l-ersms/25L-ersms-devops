@@ -3,8 +3,8 @@ kind: Service
 metadata:
   name: visit-sched-service
   namespace: visit-sched-ns
-# annotations:
-#   cloud.google.com/neg: '{"ingress": true}'
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   ports:
     - port: 80

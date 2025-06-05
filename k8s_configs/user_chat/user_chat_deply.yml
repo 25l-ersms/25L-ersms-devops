@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-chat
+  namespace: user-chat-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-chat
+  template:
+    metadata:
+      labels:
+        app: user-chat
+    spec:
+      serviceAccountName: user-chat
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+      containers:
+        - name: user-chat
+          image: gambolkf/ersms-user_chat:main
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          envFrom:
+          - configMapRef:
+              name: user-chat
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/user-chat/docs
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
