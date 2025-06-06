@@ -79,6 +79,8 @@ HTTPS_PROXY=socks5://localhost:1337 kubectl get pods
 
 ### Setting up external-secrets
 
+Repeat for all three services:
+
 ```shell
 # Add the Helm repository
 helm repo add external-secrets https://charts.external-secrets.io
@@ -109,3 +111,30 @@ kubectl apply -f k8s_configs/visit_sched/visit_sched_secrets.yml
 # check whether external-secrets has successfully created secrets
 kubectl get secrets -n visit-sched-ns
 ```
+
+### Creating resources
+
+Apply in order:
+
+- ns
+- sa
+- external secrets sa
+- secret store
+- secrets
+- configmap
+- deployment
+- service
+- ingress
+
+### Setting up the LB
+
+Googles ingress controller is too dumb to handle multiple ingress resources with a single LB, therefore we need to create it ourselves.
+
+> TODO ssl passthrough on LB
+
+- Go to LB page on GCP console
+- create external global ALB
+  - add frontend with the provisioned IP, https, auto redirect, set ssl policy to min tls 1.2
+  - for each service add backend with a corresponding zonal NEG (should be created automatically), create HTTP healthcheck pointing to `/api/<visit-sched|visit-man|user-chat>/docs`
+  - Route based on path `/api/<visit-sched|visit-man|user-chat>/*`, origin is always `*`
+  - Wait a few minutes :) (even if google claims the LB is up and running)

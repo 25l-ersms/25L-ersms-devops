@@ -6,10 +6,10 @@ metadata:
   annotations:
     # kubernetes.io/ingress.class is deprecated, but GKE needs it!
     # https://cloud.google.com/kubernetes-engine/docs/concepts/ingress#deprecated_annotation
-    kubernetes.io/ingress.class: "gce"
-    cloud.google.com/load-balancer-type: "External"
+    kubernetes.io/ingress.class: "gce-internal"
+    # cloud.google.com/load-balancer-type: "External"
     kubernetes.io/ingress.allow-http: "true"
-    kubernetes.io/ingress.global-static-ip-name: "ersms-ingress-external-alb-ipv4"
+    # kubernetes.io/ingress.global-static-ip-name: "ersms-ingress-external-alb-ipv4"
 spec:
   rules:
   - http:
