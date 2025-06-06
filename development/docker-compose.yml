@@ -99,6 +99,12 @@ services:
       - KAFKA_TOPIC=${KAFKA_TOPIC}
       - KAFKA_AUTHENTICATION_SCHEME=${KAFKA_AUTHENTICATION_SCHEME}
       - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - SECRET_KEY=${SECRET_KEY}
+      - REDIRECT_URL=${REDIRECT_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL}
     volumes:
       - ${VISIT_MANAGER_PATH}//visit_manager:/app/visit_manager
 
@@ -107,6 +113,7 @@ services:
     container_name: frontend
     build:
       context: ${FRONTEND_PATH}  # change .env to path to visit_sched repo
+    env_file: .env
     ports:
       - 3000:3000
 
@@ -153,6 +160,8 @@ services:
 
       echo -e 'Creating kafka topics'
       kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --create --if-not-exists --topic "$KAFKA_TOPIC" --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --create --if-not-exists --topic "ratings" --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --create --if-not-exists --topic "users" --replication-factor 1 --partitions 1
 
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server "$KAFKA_BOOTSTRAP_URL" --list
@@ -161,7 +170,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:9
-    container_name: pgadmin4
+    container_name: pgadmin42
     restart: unless-stopped
     ports:
       - "8888:80"

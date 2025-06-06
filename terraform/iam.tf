@@ -29,7 +29,10 @@ resource "google_project_iam_binding" "kafka_service_account_iam_binding" {
 
   members = [
     google_service_account.bastion_service_account.member,
-    google_service_account.gke_pod_identity.member
+    google_service_account.gke_pod_identity.member,
+    google_service_account.gke_pod_identity_visit_sched.member,
+    google_service_account.gke_pod_identity_visit_man.member,
+    google_service_account.gke_pod_identity_user_chat.member,
   ]
 }
 
@@ -41,7 +44,8 @@ resource "google_project_iam_binding" "firestore_service_account_iam_binding_gke
   role    = each.value
 
   members = [
-    google_service_account.gke_pod_identity.member
+    google_service_account.gke_pod_identity.member,
+    google_service_account.gke_pod_identity_user_chat.member,
   ]
 }
 
@@ -87,14 +91,61 @@ resource "google_service_account" "gke_pod_identity" {
   display_name = "GKE pod (example)"
 }
 
-resource "google_project_iam_binding" "gke_iam_workflow_identity_iam_binding" {
+# resource "google_project_iam_binding" "gke_iam_workflow_identity_iam_binding" {
+#   for_each = toset([
+#     "roles/iam.workloadIdentityUser"
+#   ])
+#   project = local.gcp_project_id
+#   role    = each.value
+
+#   members = [
+#     "serviceAccount:${local.gcp_project_id}.svc.id.goog[default/debug-sdk-sa]"
+#   ]
+# }
+
+resource "google_service_account" "gke_pod_identity_external_secrets" {
+  account_id   = "${local.prfx}eso"
+  display_name = "Service Account for External Secrets Operator on GKE"
+}
+
+resource "google_project_iam_binding" "gke_pod_identity_external_secrets_iam_binding1" {
   for_each = toset([
-    "roles/iam.workloadIdentityUser"
+    "roles/secretmanager.secretAccessor",
+    "roles/iam.serviceAccountTokenCreator"
   ])
   project = local.gcp_project_id
   role    = each.value
 
   members = [
-    "serviceAccount:${local.gcp_project_id}.svc.id.goog[default/debug-sdk-sa]"
+    google_service_account.gke_pod_identity_external_secrets.member
+  ]
+}
+
+resource "google_service_account" "gke_pod_identity_visit_sched" {
+  account_id   = "${local.prfx}visit-sched"
+  display_name = "Service Account for Visit Scheduler on GKE"
+}
+
+resource "google_service_account" "gke_pod_identity_visit_man" {
+  account_id   = "${local.prfx}visit-man"
+  display_name = "Service Account for Visit Manager on GKE"
+}
+
+resource "google_service_account" "gke_pod_identity_user_chat" {
+  account_id   = "${local.prfx}user-chat"
+  display_name = "Service Account for User Chat on GKE"
+}
+
+resource "google_project_iam_binding" "gke_pod_identity_user_chat_iam_binding" {
+  project = local.gcp_project_id
+  role    = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-sched-ns/visit-sched]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-man-ns/visit-man]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[user-chat-ns/user-chat]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-sched-ns/external-secrets]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[visit-man-ns/external-secrets]",
+    "serviceAccount:${local.gcp_project_id}.svc.id.goog[user-chat-ns/external-secrets]",
   ]
 }
