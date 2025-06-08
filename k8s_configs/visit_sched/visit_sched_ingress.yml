@@ -1,23 +1,25 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: visit-sched-ingress
-  namespace: visit-sched-ns
-  annotations:
-    # kubernetes.io/ingress.class is deprecated, but GKE needs it!
-    # https://cloud.google.com/kubernetes-engine/docs/concepts/ingress#deprecated_annotation
-    kubernetes.io/ingress.class: "gce-internal"
-    # cloud.google.com/load-balancer-type: "External"
-    kubernetes.io/ingress.allow-http: "true"
-    # kubernetes.io/ingress.global-static-ip-name: "ersms-ingress-external-alb-ipv4"
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /api/visit-sched/*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: visit-sched-service
-            port:
-              number: 80
+# DEPRECATED! use gateway instead
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: visit-sched-ingress
+#   namespace: visit-sched-ns
+#   annotations:
+#     # kubernetes.io/ingress.class is deprecated, but GKE needs it!
+#     # https://cloud.google.com/kubernetes-engine/docs/concepts/ingress#deprecated_annotation
+#     kubernetes.io/ingress.class: "gce-internal"
+#     # cloud.google.com/load-balancer-type: "External"
+#     kubernetes.io/ingress.allow-http: "true"
+#     # kubernetes.io/ingress.global-static-ip-name: "ersms-ingress-external-alb-ipv4"
+# spec:
+#   rules:
+#   - http:
+#       paths:
+#       - path: /api/visit-sched/*
+#         pathType: ImplementationSpecific
+#         backend:
+#           service:
+#             name: visit-sched-service
+#             port:
+#               number: 80

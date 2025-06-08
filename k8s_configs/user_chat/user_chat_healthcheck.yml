@@ -1,0 +1,36 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: user-chat-healthcheck
+  namespace: user-chat-ns
+spec:
+  default:
+    checkIntervalSec: 5
+    timeoutSec: 5
+    healthyThreshold: 2
+    unhealthyThreshold: 2
+    logConfig:
+      enabled: false
+    config:
+      type: HTTP
+      httpHealthCheck:
+        portSpecification: USE_SERVING_PORT
+        # port: PORT
+        # portName: PORT_NAME
+        # host: HOST
+        requestPath: /api/user-chat/docs
+        # response: RESPONSE
+        # proxyHeader: PROXY_HEADER
+      # httpsHealthCheck:
+      #   portSpecification: PORT_SPECIFICATION
+      #   port: PORT
+      #   portName: PORT_NAME
+      #   host: HOST
+      #   requestPath: REQUEST_PATH
+      #   response: RESPONSE
+      #   proxyHeader: PROXY_HEADER
+  targetRef:
+    group: ""
+    kind: Service
+    name: user-chat-service
+    namespace: user-chat-ns

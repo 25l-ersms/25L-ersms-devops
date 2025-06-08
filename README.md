@@ -31,6 +31,7 @@ psql -d visit_manager -U postgres
 PgAdmin4 is running on port 8888 with a pre-configured server, login using credentials from docker compose file, find PG password in envfile.
 
 ## Prod (sortof, like personal prod? maybe staging?)
+
 ### Prerequisites
 
 `gcloud` CLI authenticated and pointing to the desired project.
@@ -114,7 +115,9 @@ kubectl get secrets -n visit-sched-ns
 
 ### Creating resources
 
-Apply in order:
+First create gateway and gateway http redirect.
+
+Then, apply in order for each servive:
 
 - ns
 - sa
@@ -124,7 +127,9 @@ Apply in order:
 - configmap
 - deployment
 - service
-- ingress
+- ~~ingress~~ (deprecated)
+- healthcheck
+- httproute
 
 ### Setting up the LB
 

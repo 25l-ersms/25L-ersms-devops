@@ -6,6 +6,9 @@ module "gke" {
   region             = local.gcp_region
   kubernetes_version = "1.32"
 
+  enterprise_config = "STANDARD"
+  datapath_provider = "ADVANCED_DATAPATH"
+
   # networking
   # regional=false implies a zonal cluster
   regional                    = false
@@ -42,6 +45,7 @@ module "gke" {
   enable_identity_service     = true
   enable_secret_manager_addon = true
   dns_cache                   = false
+  gateway_api_channel         = "CHANNEL_STANDARD"
 
   deletion_protection = false
 

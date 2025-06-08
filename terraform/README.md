@@ -381,7 +381,7 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | <a name="input_bastion_ssh_port"></a> [bastion\_ssh\_port](#input\_bastion\_ssh\_port) | Port for inbound SSH connections to bastion | `string` | `2222` | no |
 | <a name="input_elasticsearch_instance_size"></a> [elasticsearch\_instance\_size](#input\_elasticsearch\_instance\_size) | Instance size of ES machine | `string` | `"e2-standard-2"` | no |
 | <a name="input_gke_initial_nodes"></a> [gke\_initial\_nodes](#input\_gke\_initial\_nodes) | Initial number of nodes in GKE CLUSTER | `number` | `1` | no |
-| <a name="input_gke_instance_size"></a> [gke\_instance\_size](#input\_gke\_instance\_size) | Instance size of nodes in GKE CLUSTER | `string` | `"e2-medium"` | no |
+| <a name="input_gke_instance_size"></a> [gke\_instance\_size](#input\_gke\_instance\_size) | Instance size of nodes in GKE CLUSTER | `string` | `"e2-standard-2"` | no |
 | <a name="input_gke_max_nodes"></a> [gke\_max\_nodes](#input\_gke\_max\_nodes) | Maximum number of nodes in GKE CLUSTER | `number` | `2` | no |
 | <a name="input_gke_min_nodes"></a> [gke\_min\_nodes](#input\_gke\_min\_nodes) | Minimum number of nodes in GKE CLUSTER | `number` | `1` | no |
 | <a name="input_kafka_memory_bytes"></a> [kafka\_memory\_bytes](#input\_kafka\_memory\_bytes) | Memory size in Kafka cluster | `number` | `3221225472` | no |
