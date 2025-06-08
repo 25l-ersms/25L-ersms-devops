@@ -52,7 +52,7 @@ Fetch GKE credentials:
 ```shell
 # FROM BASTION HOST
 
-gcloud container clusters get-credentials ersms-test-gke --region=<REGION>-a --project=<PROJECT_ID>
+gcloud container clusters get-credentials ersms-gke --region=<REGION>-a --project=<PROJECT_ID>
 ```
 
 Interact with the cluster using `kubectl`:
@@ -315,6 +315,7 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | [google_compute_instance.bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
 | [google_compute_instance.elasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
 | [google_compute_router.group1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router) | resource |
+| [google_compute_ssl_policy.modern-profile](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_ssl_policy) | resource |
 | [google_dns_managed_zone.internal-zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) | resource |
 | [google_dns_record_set.elsasticsearch](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) | resource |
 | [google_firestore_database.database](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/firestore_database) | resource |
@@ -323,13 +324,20 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | [google_project_iam_binding.bastion_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.firestore_service_account_iam_binding_bastion](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.firestore_service_account_iam_binding_gke](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
-| [google_project_iam_binding.gke_iam_workflow_identity_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.gke_ingress_controller_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.gke_pod_identity_external_secrets_iam_binding1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
+| [google_project_iam_binding.gke_pod_identity_user_chat_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_project_iam_binding.kafka_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) | resource |
 | [google_secret_manager_secret.elasticsearch_cacert](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.elasticsearch_root_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.elasticsearch_root_user](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.google_oauth2_client_id](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.google_oauth2_client_secret](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.jwt_secret_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.postgres_root_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret.postgres_user_password](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.secret_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret.stripe_api_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
 | [google_secret_manager_secret_iam_binding.elasticsearch_cacert_elsasticsearch_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
 | [google_secret_manager_secret_iam_binding.elasticsearch_cacert_elsasticsearch_secretversionadder_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
 | [google_secret_manager_secret_iam_binding.elasticsearch_root_password_elsasticsearch_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
@@ -337,11 +345,21 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | [google_secret_manager_secret_iam_binding.postgres_root_password_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
 | [google_secret_manager_secret_iam_binding.postgres_user_password_secretaccessor_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_iam_binding) | resource |
 | [google_secret_manager_secret_version.elasticsearch_root_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.elasticsearch_root_user_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.google_oauth2_client_id_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.google_oauth2_client_secret_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.jwt_secret_key_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_secret_manager_secret_version.postgres_root_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_secret_manager_secret_version.postgres_user_password_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.secret_key_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_secret_manager_secret_version.stripe_api_key_initial](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_service_account.bastion_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.elasticsearch_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.gke_pod_identity](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_external_secrets](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_user_chat](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_visit_man](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account.gke_pod_identity_visit_sched](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account.gke_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_networking_connection.default](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_networking_connection) | resource |
 | [google_storage_bucket.k8s_manifests](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
@@ -364,7 +382,7 @@ gcloud projects add-iam-policy-binding <PROJECT_ID> \
 | <a name="input_bastion_ssh_port"></a> [bastion\_ssh\_port](#input\_bastion\_ssh\_port) | Port for inbound SSH connections to bastion | `string` | `2222` | no |
 | <a name="input_elasticsearch_instance_size"></a> [elasticsearch\_instance\_size](#input\_elasticsearch\_instance\_size) | Instance size of ES machine | `string` | `"e2-standard-2"` | no |
 | <a name="input_gke_initial_nodes"></a> [gke\_initial\_nodes](#input\_gke\_initial\_nodes) | Initial number of nodes in GKE CLUSTER | `number` | `1` | no |
-| <a name="input_gke_instance_size"></a> [gke\_instance\_size](#input\_gke\_instance\_size) | Instance size of nodes in GKE CLUSTER | `string` | `"e2-medium"` | no |
+| <a name="input_gke_instance_size"></a> [gke\_instance\_size](#input\_gke\_instance\_size) | Instance size of nodes in GKE CLUSTER | `string` | `"e2-standard-2"` | no |
 | <a name="input_gke_max_nodes"></a> [gke\_max\_nodes](#input\_gke\_max\_nodes) | Maximum number of nodes in GKE CLUSTER | `number` | `2` | no |
 | <a name="input_gke_min_nodes"></a> [gke\_min\_nodes](#input\_gke\_min\_nodes) | Minimum number of nodes in GKE CLUSTER | `number` | `1` | no |
 | <a name="input_kafka_memory_bytes"></a> [kafka\_memory\_bytes](#input\_kafka\_memory\_bytes) | Memory size in Kafka cluster | `number` | `3221225472` | no |

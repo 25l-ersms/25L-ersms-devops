@@ -4,7 +4,10 @@ module "gke" {
   project_id         = local.gcp_project_id
   name               = "${local.prfx}gke"
   region             = local.gcp_region
-  kubernetes_version = "1.32.2"
+  kubernetes_version = "1.32"
+
+  enterprise_config = "STANDARD"
+  datapath_provider = "ADVANCED_DATAPATH"
 
   # networking
   # regional=false implies a zonal cluster
@@ -42,6 +45,7 @@ module "gke" {
   enable_identity_service     = true
   enable_secret_manager_addon = true
   dns_cache                   = false
+  gateway_api_channel         = "CHANNEL_STANDARD"
 
   deletion_protection = false
 
@@ -95,4 +99,11 @@ module "gke" {
 
 resource "google_compute_global_address" "ingress_external_alb_ip" {
   name = "${local.prfx}ingress-external-alb-ipv4"
+}
+
+
+resource "google_compute_ssl_policy" "modern-profile" {
+  name            = "${local.prfx}ssl-policy"
+  profile         = "MODERN"
+  min_tls_version = "TLS_1_2"
 }

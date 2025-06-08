@@ -1,2 +1,12 @@
 .env
 development/docker/
+
+
+*.key
+*.csr
+*.pem
+*.crt
+*.cert
+
+*_csr.yaml
+*_csr.yml

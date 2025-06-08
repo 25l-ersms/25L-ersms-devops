@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-chat
+  namespace: user-chat-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-chat
+  template:
+    metadata:
+      labels:
+        app: user-chat
+    spec:
+      serviceAccountName: user-chat
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+      containers:
+        - name: user-chat
+          image: gambolkf/ersms-user_chat@sha256:472f6a26256ca670586218a94f5fdac57a5fae5801793b12a0caa368ca56c4b7
+          command: ["bash"]
+          args: ["entrypoint.sh", "run-https"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          envFrom:
+          - configMapRef:
+              name: user-chat
+          env:
+            - name: SSL_KEYFILE
+              value: "/var/certs/ssl/tls.key"
+            - name: SSL_CERTFILE
+              value: "/var/certs/ssl/tls.crt"
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/user-chat/docs
+              port: 8081
+              scheme: HTTPS
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: "/var/certs/ssl"
+              name: ssl
+              readOnly: true
+      volumes:
+        - name: ssl
+          secret:
+            secretName: user-chat-tls

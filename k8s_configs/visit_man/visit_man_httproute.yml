@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: visit-man-httproute
+  namespace: visit-man-ns
+spec:
+  parentRefs:
+  - kind: Gateway
+    name: external-http
+    namespace: default
+  hostnames:
+  - hands4hire.space
+  rules:
+  - matches:
+    - path:
+        value: /api/visit-man/
+        type: PathPrefix
+    backendRefs:
+    - name: visit-man-service
+      port: 80
