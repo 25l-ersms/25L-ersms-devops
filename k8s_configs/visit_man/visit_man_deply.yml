@@ -18,7 +18,9 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-man
-          image: gambolkf/ersms-visit_manager:main
+          image: gambolkf/ersms-visit_manager@sha256:960f9c376665945f931943564287955a5f5faafeefca295a9ed5053cbd5aa692
+          command: ["bash"]
+          args: ["entrypoint.sh", "run-https"]
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
@@ -63,13 +65,25 @@ spec:
               value: https://hands4hire.space/api/visit-man/auth
             - name: FRONTEND_URL
               value: https://hands4hire.space/api/visit-man/docs
+            - name: SSL_KEYFILE
+              value: "/var/certs/ssl/tls.key"
+            - name: SSL_CERTFILE
+              value: "/var/certs/ssl/tls.crt"
           readinessProbe:
             failureThreshold: 5
             httpGet:
               path: /api/visit-man/docs
               port: 8082
-              scheme: HTTP
+              scheme: HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: "/var/certs/ssl"
+              name: ssl
+              readOnly: true
+      volumes:
+        - name: ssl
+          secret:
+            secretName: visit-man-tls

@@ -10,6 +10,7 @@ spec:
     - port: 80
       targetPort: 8081
       protocol: TCP
+      appProtocol: HTTPS
   selector:
     app: user-chat
   type: NodePort

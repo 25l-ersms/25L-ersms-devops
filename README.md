@@ -80,7 +80,7 @@ HTTPS_PROXY=socks5://localhost:1337 kubectl get pods
 
 ### Setting up external-secrets
 
-Repeat for all three services:
+Needs to be done before deploying workloads
 
 ```shell
 # Add the Helm repository
@@ -99,18 +99,29 @@ helm install external-secrets external-secrets/external-secrets \
 kubectl annotate serviceaccount external-secrets \
   -n external-secrets \
   iam.gke.io/gcp-service-account=<RESOURCE_PREFIX>-eso@<PROJECT_ID>.iam.gserviceaccount.com
+```
 
-# create an SA in a service namespace (example: visit scheduler)
-kubectl apply -f k8s_configs/visit_sched/visit_sched_external_secrets_sa.yml
+### Generating certificates for backend pods
 
-# create a namespace-scoped secret store
-kubectl apply -f k8s_configs/visit_sched/visit_sched_secret_store.yml
+Needs to be done before deploying workloads
 
-# create secrets from secret manager
-kubectl apply -f k8s_configs/visit_sched/visit_sched_secrets.yml
+```shell
+# repeat for visit sched and user chat
 
-# check whether external-secrets has successfully created secrets
-kubectl get secrets -n visit-sched-ns
+SVC="visit-man"
+SVC_NAME="visit_man"
+
+openssl genrsa -out "$SVC.key" 2048
+openssl req -new -key "$SVC.key" -subj "/CN=$SVC-service.$SVC-ns.svc.ersms-gke" -out "$SVC.csr"
+
+sed "s/{{B64_CSR}}/`cat $SVC.csr | base64 | tr -d '\n'`/" k8s_configs/$SVC_NAME/${SVC_NAME}_csr.yml.template > k8s_configs/$SVC_NAME/${SVC_NAME}_csr.yml
+
+kubectl apply -f k8s_configs/$SVC_NAME/${SVC_NAME}_csr.yml
+kubectl certificate approve "$SVC"
+
+kubectl get csr "$SVC" -o jsonpath='{.status.certificate}' | base64 --decode > $SVC.crt
+
+kubectl create secret tls $SVC-tls --cert=$SVC.crt --key=$SVC.key -n ${SVC}-ns
 ```
 
 ### Creating resources

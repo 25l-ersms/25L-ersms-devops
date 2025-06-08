@@ -18,7 +18,9 @@ spec:
         iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-sched
-          image: gambolkf/ersms-visit_sched@sha256:a3daec766ffa692de4a3d8910d7bb9e639c597ec5a6e89599cbdb2d4632a4eaf
+          image: gambolkf/ersms-visit_sched@sha256:88aae2d2bfcab1df549083a15055b701c93afc16b8083c7435da08bb9e1d71fd
+          command: ["bash"]
+          args: ["entrypoint.sh", "run-https"]
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -38,12 +40,16 @@ spec:
                   key: ersms-elasticsearch-root-password
             - name: ES_CACERT_PATH
               value: "/var/gcpsm/es_cacart.pem"
+            - name: SSL_KEYFILE
+              value: "/var/certs/ssl/tls.key"
+            - name: SSL_CERTFILE
+              value: "/var/certs/ssl/tls.crt"
           readinessProbe:
             failureThreshold: 5
             httpGet:
               path: /api/visit-sched/docs
               port: 8080
-              scheme: HTTP
+              scheme: HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
             successThreshold: 1
@@ -52,6 +58,9 @@ spec:
             - mountPath: "/var/gcpsm"
               name: elasticsearch-cacert
               readOnly: true
+            - mountPath: "/var/certs/ssl"
+              name: ssl
+              readOnly: true
       volumes:
         - name: elasticsearch-cacert
           secret:
@@ -59,3 +68,6 @@ spec:
             items:
             - key: ersms-elasticsearch-cacert
               path: es_cacart.pem
+        - name: ssl
+          secret:
+            secretName: visit-sched-tls

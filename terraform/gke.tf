@@ -100,3 +100,10 @@ module "gke" {
 resource "google_compute_global_address" "ingress_external_alb_ip" {
   name = "${local.prfx}ingress-external-alb-ipv4"
 }
+
+
+resource "google_compute_ssl_policy" "modern-profile" {
+  name            = "${local.prfx}ssl-policy"
+  profile         = "MODERN"
+  min_tls_version = "TLS_1_2"
+}

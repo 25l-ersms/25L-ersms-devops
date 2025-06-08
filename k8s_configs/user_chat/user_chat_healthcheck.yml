@@ -10,10 +10,10 @@ spec:
     healthyThreshold: 2
     unhealthyThreshold: 2
     logConfig:
-      enabled: false
+      enabled: true
     config:
-      type: HTTP
-      httpHealthCheck:
+      type: HTTPS
+      httpsHealthCheck:
         portSpecification: USE_SERVING_PORT
         # port: PORT
         # portName: PORT_NAME

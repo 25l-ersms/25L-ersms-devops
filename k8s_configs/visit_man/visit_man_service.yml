@@ -10,6 +10,7 @@ spec:
     - port: 80
       targetPort: 8082
       protocol: TCP
+      appProtocol: HTTPS
   selector:
     app: visit-man
   type: NodePort
