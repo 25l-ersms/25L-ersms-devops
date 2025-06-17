@@ -96,7 +96,7 @@ variable "gke_max_nodes" {
 variable "gke_instance_size" {
   description = "Instance size of nodes in GKE CLUSTER"
   type        = string
-  default     = "e2-medium"
+  default     = "e2-standard-2"
 }
 
 #################

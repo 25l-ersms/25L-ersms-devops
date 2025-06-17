@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: visit-man
+  namespace: visit-man-ns
+data:
+  KAFKA_TOPIC: test-topic
+  KAFKA_BOOTSTRAP_URL: bootstrap.ersms-kafka.europe-west2.managedkafka.ersms-461920.cloud.goog:9092
+  KAFKA_AUTHENTICATION_SCHEME: "oauth"
+  POSTGRES_HOST: "10.66.0.3"
+  POSTGRES_PORT: "5432"
+  VISIT_MANAGER_LOG_LEVEL: "INFO"
+  VISIT_MANAGER_ROOT_PATH: "/api/visit-man"

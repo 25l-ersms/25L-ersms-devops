@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-chat
+  namespace: user-chat-ns
+data:
+  KAFKA_TOPIC: test-topic
+  KAFKA_BOOTSTRAP_URL: bootstrap.ersms-kafka.europe-west2.managedkafka.ersms-461920.cloud.goog:9092
+  KAFKA_AUTHENTICATION_SCHEME: "oauth"
+  USER_CHAT_LOG_LEVEL: "INFO"
+  USER_CHAT_ROOT_PATH: "/api/user-chat"
+  FIRESTORE_DATABASE: "ersms"

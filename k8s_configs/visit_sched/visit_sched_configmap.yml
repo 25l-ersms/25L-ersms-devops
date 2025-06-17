@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: visit-sched
+  namespace: visit-sched-ns
+data:
+  KAFKA_TOPIC: test-topic
+  KAFKA_BOOTSTRAP_URL: bootstrap.ersms-kafka.europe-west2.managedkafka.ersms-461920.cloud.goog:9092
+  KAFKA_AUTHENTICATION_SCHEME: "oauth"
+  ES_HOST: "https://10.80.0.2:9200"
+  VISIT_SCHEDULER_LOG_LEVEL: "INFO"
+  VISIT_SCHEDULER_ROOT_PATH: "/api/visit-sched"

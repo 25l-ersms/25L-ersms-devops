@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visit-man
+  namespace: visit-man-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: visit-man
+  template:
+    metadata:
+      labels:
+        app: visit-man
+    spec:
+      serviceAccountName: visit-man
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+      containers:
+        - name: visit-man
+          image: gambolkf/ersms-visit_manager@sha256:960f9c376665945f931943564287955a5f5faafeefca295a9ed5053cbd5aa692
+          command: ["bash"]
+          args: ["entrypoint.sh", "run-https"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+          envFrom:
+          - configMapRef:
+              name: visit-man
+          env:
+            - name: POSTGRES_USER
+              value: root
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: ersms-postgres-root-password
+            - name: STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-api-key
+                  key: ersms-stripe-api-key
+            # TODO move the following to secrets
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: google-oauth2-client-id
+                  key: ersms-google-oauth2-client-id
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google-oauth2-client-secret
+                  key: ersms-google-oauth2-client-secret
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-key
+                  key: ersms-secret-key
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret-key
+                  key: ersms-jwt-secret-key
+            - name: REDIRECT_URL
+              value: https://hands4hire.space/api/visit-man/auth
+            - name: FRONTEND_URL
+              value: https://hands4hire.space/api/visit-man/docs
+            - name: SSL_KEYFILE
+              value: "/var/certs/ssl/tls.key"
+            - name: SSL_CERTFILE
+              value: "/var/certs/ssl/tls.crt"
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/visit-man/docs
+              port: 8082
+              scheme: HTTPS
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: "/var/certs/ssl"
+              name: ssl
+              readOnly: true
+      volumes:
+        - name: ssl
+          secret:
+            secretName: visit-man-tls

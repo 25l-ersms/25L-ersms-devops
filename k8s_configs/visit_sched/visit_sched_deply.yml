@@ -13,9 +13,61 @@ spec:
       labels:
         app: visit-sched
     spec:
+      serviceAccountName: visit-sched
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
       containers:
         - name: visit-sched
-          image: gambolkf/ersms-visit_sched:main
+          image: gambolkf/ersms-visit_sched@sha256:88aae2d2bfcab1df549083a15055b701c93afc16b8083c7435da08bb9e1d71fd
+          command: ["bash"]
+          args: ["entrypoint.sh", "run-https"]
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          envFrom:
+          - configMapRef:
+              name: visit-sched
+          env:
+            - name: ES_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-root-user
+                  key: ersms-elasticsearch-root-user
+            - name: ES_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch-root-password
+                  key: ersms-elasticsearch-root-password
+            - name: ES_CACERT_PATH
+              value: "/var/gcpsm/es_cacart.pem"
+            - name: SSL_KEYFILE
+              value: "/var/certs/ssl/tls.key"
+            - name: SSL_CERTFILE
+              value: "/var/certs/ssl/tls.crt"
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/visit-sched/docs
+              port: 8080
+              scheme: HTTPS
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 10
+          volumeMounts:
+            - mountPath: "/var/gcpsm"
+              name: elasticsearch-cacert
+              readOnly: true
+            - mountPath: "/var/certs/ssl"
+              name: ssl
+              readOnly: true
+      volumes:
+        - name: elasticsearch-cacert
+          secret:
+            secretName: elasticsearch-cacert
+            items:
+            - key: ersms-elasticsearch-cacert
+              path: es_cacart.pem
+        - name: ssl
+          secret:
+            secretName: visit-sched-tls
